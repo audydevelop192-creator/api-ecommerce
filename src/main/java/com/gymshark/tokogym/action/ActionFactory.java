@@ -11,6 +11,9 @@ public class ActionFactory {
             case ActionConstant.REGISTER -> new RegisterAction();
             case ActionConstant.LOGIN -> new LoginAction();
             case ActionConstant.PROFILE -> new ProfileAction();
+            case ActionConstant.MEMBERSHIP_CREATE -> new MembershipCreateAction();
+            case ActionConstant.MEMBERSHIP_LIST -> new MembershipListAction();
+            case ActionConstant.MEMBERSHIP_DELETE -> new MembershipDeleteAction();
 
 
             default -> throw new IllegalStateException("Unexpected value: " + action);

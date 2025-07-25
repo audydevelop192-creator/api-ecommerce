@@ -56,6 +56,7 @@ public class LoginAction extends ActionAbstract<LoginRequest>{
         ObjectMapper objectMapper = new ObjectMapper();
         JwtUtil jwtUtil = new JwtUtil();
         String token = jwtUtil.generateToken(objectMapper.writeValueAsString(authDto));
+        loginResponse.setMessage("Berhasil Login");
         loginResponse.setToken(token);
         return loginResponse;
     }

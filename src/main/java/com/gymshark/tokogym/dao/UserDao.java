@@ -11,7 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserDao {
+public class
+UserDao {
 
     private static JdbcTemplate template = JdbcUtil.get();
 
