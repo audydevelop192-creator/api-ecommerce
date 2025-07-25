@@ -7,4 +7,5 @@ public class ActionConstant {
     public static final String MEMBERSHIP_CREATE = "membershipCreate";
     public static final String MEMBERSHIP_LIST = "membershipList";
     public static final String MEMBERSHIP_DELETE = "membershipDelete";
+    public static final String MEMBERSHIP_UPDATE = "membershipUpdate";
 }

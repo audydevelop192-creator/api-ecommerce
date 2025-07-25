@@ -56,4 +56,19 @@ public class MembershipDao {
 
     }
 
+    public void updateMembership(Membership membership) {
+
+        String query = "UPDATE membership set name = ?, description =?, duration=?, type_duration=?, price=? where id=?;";
+
+        template.update(query,
+                membership.getName(),
+                membership.getDescription(),
+                membership.getDuration(),
+                membership.getTypeDuration(),
+                membership.getPrice(),
+                membership.getId()
+        );
+
+    }
+
 }
