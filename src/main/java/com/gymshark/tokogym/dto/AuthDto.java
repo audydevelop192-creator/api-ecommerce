@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class AuthDto {
 
-    private Integer  role;
+    private Integer role;
 
-    private Integer  userId;
+    private Integer userId;
 
     private String email;
 }
