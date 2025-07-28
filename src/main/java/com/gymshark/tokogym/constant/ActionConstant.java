@@ -16,5 +16,17 @@ public class ActionConstant {
     public static final String SUPPLIER_LIST = "supplierList";
     public static final String SUPPLIER_DELETE = "supplierDelete";
     public static final String SUPPLIER_UPDATE = "supplierUpdate";
+    public static final String PRODUCT_CREATE = "productCreate";
+    public static final String PRODUCT_UPDATE_STOCK = "productUpdateStock";
+    public static final String PRODUCT_UPDATE = "productUpdate";
+    public static final String PRODUCT_LIST = "productList";
+    public static final String PRODUCT_DELETE = "productDelete";
+    public static final String CART_CREATE = "cartCreate";
+    public static final String CART_LIST = "cartList";
+    public static final String COMMENT_CREATE = "commentCreate";
+    public static final String COMMENT_LIST = "commentList";
+    public static final String TRANSACTION_CREATE = "transactionCreate";
+    public static final String TRANSACTION_CHANGE_STATUS = "transactionChangeStatus";
+
 
 }

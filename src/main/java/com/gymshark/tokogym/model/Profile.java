@@ -9,8 +9,12 @@ import java.sql.Timestamp;
 @Setter
 public class Profile {
     private String name;
+
     private String email;
+
     private Timestamp expiredDate;
+
     private String membershipName;
+
     private String membershipRef;
 }

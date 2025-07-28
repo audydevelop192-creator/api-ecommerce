@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PaymentDao {
 
-    private static JdbcTemplate template = JdbcUtil.get();
+    private static final JdbcTemplate template = JdbcUtil.get();
 
     public void insertPayment(Payment payment) {
         String query = "insert into payment (account_number, account_name, account_bank) values (?,?,?)";
@@ -59,5 +59,11 @@ public class PaymentDao {
                 "where id = ?;";
 
         template.update(query, id);
+    }
+
+    public boolean isIdExist(Integer id){
+        String query = "SELECT COUNT(*) FROM payment WHERE id = ? and is_deleted = 0";
+        Integer count = template.queryForObject(query, Integer.class, id);
+        return count > 0;
     }
 }

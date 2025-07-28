@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MembershipDao {
 
-    private static JdbcTemplate template = JdbcUtil.get();
+    private static final JdbcTemplate template = JdbcUtil.get();
 
     public void insertMembership(Membership membership) {
         String query = "insert into membership (name, description, duration, type_duration, price)\n" +

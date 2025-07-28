@@ -1,6 +1,5 @@
 package com.gymshark.tokogym.dao;
 
-import com.gymshark.tokogym.model.Payment;
 import com.gymshark.tokogym.model.Supplier;
 import com.gymshark.tokogym.util.JdbcUtil;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,13 +11,19 @@ import java.util.List;
 
 public class SupplierDao {
 
-    private static JdbcTemplate template = JdbcUtil.get();
+    private static final JdbcTemplate template = JdbcUtil.get();
 
 
     public boolean isCodeExist(String code){
-        String query = "SELECT COUNT(*) FROM supplier WHERE code = ?";
+        String query = "SELECT COUNT(*) FROM supplier WHERE code = ? and is_deleted = 0";
         Integer count = template.queryForObject(query, Integer.class, code);
-        return count != null && count > 0;
+        return count > 0;
+    }
+
+    public boolean isIdExist(Integer id){
+        String query = "SELECT COUNT(*) FROM supplier WHERE id = ? and is_deleted = 0";
+        Integer count = template.queryForObject(query, Integer.class, id);
+        return count > 0;
     }
 
     public void insertSupplier(Supplier supplier) {

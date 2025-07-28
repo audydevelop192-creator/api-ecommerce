@@ -23,7 +23,17 @@ public class ActionFactory {
             case ActionConstant.SUPPLIER_LIST -> new SupplierListAction();
             case ActionConstant.SUPPLIER_DELETE -> new SupplierDeleteAction();
             case ActionConstant.SUPPLIER_UPDATE -> new SupplierUpdateAction();
-
+            case ActionConstant.PRODUCT_CREATE -> new ProductCreateAction();
+            case ActionConstant.PRODUCT_UPDATE_STOCK -> new ProductUpdateStockAction();
+            case ActionConstant.PRODUCT_UPDATE -> new ProductUpdateAction();
+            case ActionConstant.PRODUCT_LIST -> new ProductListAction();
+            case ActionConstant.PRODUCT_DELETE -> new ProductDeleteAction();
+            case ActionConstant.CART_CREATE -> new CartCreateAction();
+            case ActionConstant.CART_LIST -> new CartListAction();
+            case ActionConstant.COMMENT_CREATE -> new CommentCreateAction();
+            case ActionConstant.COMMENT_LIST -> new CommentListAction();
+            case ActionConstant.TRANSACTION_CREATE -> new TransactionCreateAction();
+            case ActionConstant.TRANSACTION_CHANGE_STATUS -> new TransactionChangeStatusAction();
 
             default -> throw new IllegalStateException("Unexpected value: " + action);
         };

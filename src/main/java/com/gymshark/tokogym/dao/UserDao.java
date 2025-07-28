@@ -11,10 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class
-UserDao {
+public class UserDao {
 
-    private static JdbcTemplate template = JdbcUtil.get();
+    private static final JdbcTemplate template = JdbcUtil.get();
 
     public boolean checkUserExist(String email) {
         String query = "SELECT name , email, password, role from user where user.email = ?;";
@@ -54,6 +53,7 @@ UserDao {
             return users.getFirst();
         }
     }
+
     public Profile findProfileByUserId(Integer userId) {
         String query = "SELECT u.name, u.email, mu.expired_date,m.name as membership_name,mu.membership_ref\n" +
                 "from user u\n" +

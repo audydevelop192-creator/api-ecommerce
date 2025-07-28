@@ -22,7 +22,7 @@ public class SupplierListAction extends ActionAbstract<SupplierListRequest>{
 
     @Override
     protected List<Integer> allowedUser() {
-        return List.of(RolesConstant.ADMIN, RolesConstant.CUSTOMER);
+        return List.of(RolesConstant.ADMIN);
     }
 
     protected SupplierListAction() {
