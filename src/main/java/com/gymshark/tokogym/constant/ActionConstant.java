@@ -27,6 +27,8 @@ public class ActionConstant {
     public static final String COMMENT_LIST = "commentList";
     public static final String TRANSACTION_CREATE = "transactionCreate";
     public static final String TRANSACTION_CHANGE_STATUS = "transactionChangeStatus";
+    public static final String TRANSACTION_ADD_TRACKING_NUMBER = "transactionAddTrackingNumber";
+    public static final String TRANSACTION_HISTORY = "transactionHistory";
 
 
 }
