@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PaymentDeleteAction extends ActionAbstract<PaymentDeleteRequest>{
 
-    private PaymentDao paymentDao = new PaymentDao();
+    private static final PaymentDao paymentDao = new PaymentDao();
 
     @Override
     protected boolean isLogin() {

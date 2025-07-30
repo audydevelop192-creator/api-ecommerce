@@ -33,10 +33,10 @@ public class TransactionController {
         return actionFactory.process(ActionConstant.TRANSACTION_CHANGE_STATUS, actionDto);
     }
 
-    @PostMapping("/")
-    public DefaultResponse transactionTrtransactionTrackingNumberackingNumber(@RequestBody String request,
-                                                                              @RequestHeader(name = "x-auth", required = false)
-                                                                              String token) {
+    @PostMapping("/transactionTrackingNumber")
+    public DefaultResponse transactionTrackingNumber(@RequestBody String request,
+                                                     @RequestHeader(name = "x-auth", required = false)
+                                                     String token) {
         ActionDto actionDto = new ActionDto();
         actionDto.setData(request);
         actionDto.setToken(token);
@@ -50,6 +50,16 @@ public class TransactionController {
         ActionDto actionDto = new ActionDto();
         actionDto.setData(request);
         actionDto.setToken(token);
-        return actionFactory.process(ActionConstant.TRANSACTION_HISTORY ,actionDto);
+        return actionFactory.process(ActionConstant.TRANSACTION_HISTORY, actionDto);
+    }
+
+    @PostMapping("/transactionHistoryDetail")
+    public DefaultResponse transactionHistoryDetail(@RequestBody String request,
+                                                    @RequestHeader(name = "x-auth", required = false)
+                                                    String token) {
+        ActionDto actionDto = new ActionDto();
+        actionDto.setData(request);
+        actionDto.setToken(token);
+        return actionFactory.process(ActionConstant.TRANSACTION_HISTORY_DETAIL, actionDto);
     }
 }

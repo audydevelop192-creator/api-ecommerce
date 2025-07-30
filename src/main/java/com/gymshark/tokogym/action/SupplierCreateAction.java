@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SupplierCreateAction extends ActionAbstract<SupplierCreateRequest>{
 
-    private SupplierDao supplierDao = new SupplierDao();
+    private final SupplierDao supplierDao = new SupplierDao();
 
     @Override
     protected boolean isLogin() {

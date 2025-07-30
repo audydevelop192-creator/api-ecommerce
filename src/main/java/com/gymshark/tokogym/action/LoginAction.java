@@ -15,7 +15,8 @@ import lombok.SneakyThrows;
 
 public class LoginAction extends ActionAbstract<LoginRequest>{
 
-    private UserDao userDao = new UserDao();
+    private static final UserDao userDao = new UserDao();
+
     @Override
     protected boolean isLogin() {
         return false;

@@ -16,9 +16,9 @@ import java.util.List;
 
 public class CommentCreateAction extends ActionAbstract<CommentCreateRequest> {
 
-    private final CommentDao commentDao = new CommentDao();
+    private static final CommentDao commentDao = new CommentDao();
 
-    private final ProductDao productDao = new ProductDao();
+    private static final ProductDao productDao = new ProductDao();
 
 
     @Override

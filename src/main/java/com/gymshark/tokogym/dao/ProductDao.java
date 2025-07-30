@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -34,20 +35,25 @@ public class ProductDao {
     }
 
     public Integer insertProduct(Product product) {
-        String query = "insert into product ( name, price, description, supplier_id, current_stock, selling_price) values (?,?,?,?,?,?);";
+        String query = "INSERT INTO product (name, price, description, supplier_id, current_stock, selling_price) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        template.update(query,
-                product.getName(),
-                product.getPrice(),
-                product.getDescription(),
-                product.getSupplierId(),
-                product.getCurrentStock(),
-                product.getSellingPrice(), keyHolder
-        );
+        template.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[] { "id" });
+            ps.setString(1, product.getName());
+            ps.setBigDecimal(2, product.getPrice());
+            ps.setString(3, product.getDescription());
+            ps.setInt(4, product.getSupplierId());
+            ps.setInt(5, product.getCurrentStock());
+            ps.setBigDecimal(6, product.getSellingPrice());
+            return ps;
+        }, keyHolder);
+
         return keyHolder.getKey().intValue();
     }
+
 
     public void updateProduct(Product product) {
 

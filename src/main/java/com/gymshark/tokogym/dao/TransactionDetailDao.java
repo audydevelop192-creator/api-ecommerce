@@ -1,6 +1,5 @@
 package com.gymshark.tokogym.dao;
 
-import com.gymshark.tokogym.model.Product;
 import com.gymshark.tokogym.model.TransactionDetail;
 import com.gymshark.tokogym.model.TransactionHistoryDetail;
 import com.gymshark.tokogym.util.JdbcUtil;

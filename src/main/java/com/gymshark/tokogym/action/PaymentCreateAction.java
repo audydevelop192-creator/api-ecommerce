@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PaymentCreateAction extends ActionAbstract<PaymentCreateRequest> {
 
-    private PaymentDao paymentDao = new PaymentDao();
+    private static final PaymentDao paymentDao = new PaymentDao();
 
     @Override
     protected boolean isLogin() {

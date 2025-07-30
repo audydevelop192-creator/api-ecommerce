@@ -5,8 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TransactionHistoryDetailRequest {
+public class TransactionChangeStatusMembershipRequest {
 
     private Integer transactionId;
 
+    private Integer status;
 }

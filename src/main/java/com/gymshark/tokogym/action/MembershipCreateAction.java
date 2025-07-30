@@ -14,9 +14,9 @@ import java.util.List;
 
 public class MembershipCreateAction extends ActionAbstract<MembershipCreateRequest> {
 
-    private MembershipDao membershipDao = new MembershipDao();
+    private static final MembershipDao membershipDao = new MembershipDao();
 
-    private List<String> typeDuration = List.of("Minutes", "Hour", "Day", "Month");
+    private static final List<String> typeDuration = List.of("Minutes", "Hour", "Day", "Month");
 
     @Override
     protected boolean isLogin() {

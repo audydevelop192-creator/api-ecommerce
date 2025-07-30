@@ -11,7 +11,7 @@ import com.gymshark.tokogym.model.Supplier;
 import java.util.List;
 
 public class SupplierUpdateAction extends ActionAbstract<SupplierUpdateRequest>{
-    private SupplierDao supplierDao = new SupplierDao();
+    private final SupplierDao supplierDao = new SupplierDao();
 
     @Override
     protected boolean isLogin() {

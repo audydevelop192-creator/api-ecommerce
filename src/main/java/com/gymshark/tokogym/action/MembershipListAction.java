@@ -14,7 +14,7 @@ import java.util.List;
 public class MembershipListAction extends ActionAbstract<MembershipListRequest>{
 
 
-    private MembershipDao membershipDao = new MembershipDao();
+    private static final MembershipDao membershipDao = new MembershipDao();
 
     @Override
     protected boolean isLogin() {

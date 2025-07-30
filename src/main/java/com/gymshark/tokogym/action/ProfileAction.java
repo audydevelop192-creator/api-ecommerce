@@ -11,7 +11,7 @@ import com.gymshark.tokogym.model.Profile;
 
 public class ProfileAction extends ActionAbstract<ProfileRequest>{
 
-    private UserDao userDao = new UserDao();
+    private final UserDao userDao = new UserDao();
 
     @Override
     protected boolean isLogin() {

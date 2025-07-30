@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class TransactionHistoryDetail extends DefaultResponse{
+public class TransactionHistoryDetailResponse extends DefaultResponse{
 
-    private List<TransactionHistoryDetail.TransactionHistory> supplierLists = new ArrayList<>();
+    private List<TransactionHistoryDetailResponse.TransactionHistory> transactionHistories = new ArrayList<>();
 
     @Getter
     @Setter

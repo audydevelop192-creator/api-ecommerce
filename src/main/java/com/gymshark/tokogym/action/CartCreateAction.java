@@ -14,9 +14,9 @@ import java.util.List;
 
 public class CartCreateAction extends ActionAbstract<CartCreateRequest> {
 
-    private CartDao cartDao = new CartDao();
+    private static final CartDao cartDao = new CartDao();
 
-    private ProductDao productDao = new ProductDao();
+    private static final ProductDao productDao = new ProductDao();
 
     protected CartCreateAction() {
         super(CartCreateRequest.class);

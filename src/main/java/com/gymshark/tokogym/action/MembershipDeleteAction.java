@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MembershipDeleteAction extends ActionAbstract<MembershipDeleteRequest>{
 
-    private MembershipDao membershipDao = new MembershipDao();
+    private static final MembershipDao membershipDao = new MembershipDao();
 
     @Override
     protected boolean isLogin() {

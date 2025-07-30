@@ -88,8 +88,17 @@ public class UserDao {
                 user.getPassword(),
                 user.getRole()
         );
+    }
 
 
+    public void updateMembershipUserId(Integer membershipUserId, Integer userId) {
+        String query = "UPDATE user set membership_user_id=? where id=?";
+
+        template.update(query,
+                membershipUserId,
+                userId
+
+        );
     }
 
 }

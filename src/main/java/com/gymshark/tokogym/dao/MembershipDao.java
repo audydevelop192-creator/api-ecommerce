@@ -71,4 +71,27 @@ public class MembershipDao {
 
     }
 
+    public Membership findById(Integer id){
+        String query = "SELECT id, name, description, duration, type_duration, price from membership where is_deleted = 0 and id=?;";
+
+        List<Membership> memberships = template.query(query, new Object[]{id}, new RowMapper<Membership>() {
+            @Override
+            public Membership mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Membership membership = new Membership();
+                membership.setId(rs.getInt("id"));
+                membership.setName(rs.getString("name"));
+                membership.setDescription(rs.getString("description"));
+                membership.setDuration(rs.getInt("duration"));
+                membership.setTypeDuration(rs.getString("type_duration"));
+                membership.setPrice(rs.getBigDecimal("price"));
+                return membership;
+            }
+        });
+        if (memberships.isEmpty()){
+            return null;
+        }else {
+            return memberships.getFirst();
+        }
+    }
+
 }

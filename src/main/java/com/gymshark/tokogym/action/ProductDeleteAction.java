@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ProductDeleteAction extends ActionAbstract<ProductDeleteRequest>{
 
-    private ProductDao productDao = new ProductDao();
+    private final ProductDao productDao = new ProductDao();
 
     protected ProductDeleteAction() {
         super(ProductDeleteRequest.class);

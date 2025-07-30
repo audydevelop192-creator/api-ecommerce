@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MembershipUpdateAction extends ActionAbstract<MembershipUpdateRequest>{
 
-    private MembershipDao membershipDao = new MembershipDao();
+    private static final MembershipDao membershipDao = new MembershipDao();
 
     private List<String> typeDuration = List.of("Minutes", "Hour", "Day", "Month");
 
