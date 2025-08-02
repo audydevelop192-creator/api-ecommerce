@@ -15,7 +15,7 @@ public class MembershipUpdateAction extends ActionAbstract<MembershipUpdateReque
 
     private static final MembershipDao membershipDao = new MembershipDao();
 
-    private List<String> typeDuration = List.of("Minutes", "Hour", "Day", "Month");
+    private final List<String> typeDuration = List.of("Minutes", "Hour", "Day", "Month");
 
     @Override
     protected boolean isLogin() {

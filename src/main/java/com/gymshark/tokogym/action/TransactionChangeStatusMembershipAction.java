@@ -12,7 +12,6 @@ import com.gymshark.tokogym.dto.response.DefaultResponse;
 import com.gymshark.tokogym.dto.response.TransactionChangeStatusMembershipResponse;
 import com.gymshark.tokogym.model.MembershipUser;
 import com.gymshark.tokogym.model.TransactionDetailMembership;
-import org.springframework.data.relational.core.sql.In;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class TransactionChangeStatusMembershipAction extends ActionAbstract<Tran
 
     private static final TransactionMembershipDetailDao transactionMembershipDetailDao = new TransactionMembershipDetailDao();
 
-    UserDao userDao = new UserDao();
+    private static final UserDao userDao = new UserDao();
 
     protected TransactionChangeStatusMembershipAction() {
         super(TransactionChangeStatusMembershipRequest.class);

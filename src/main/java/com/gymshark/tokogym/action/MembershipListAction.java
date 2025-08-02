@@ -45,6 +45,7 @@ public class MembershipListAction extends ActionAbstract<MembershipListRequest>{
             membershipList.setPrice(membership.getPrice());
             membershipListResponse.getMembershipLists().add(membershipList);
         }
+        membershipListResponse.setMessage("Berhasil Mendapatkan Data");
         return membershipListResponse;
     }
 }

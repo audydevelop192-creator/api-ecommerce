@@ -24,6 +24,8 @@ public class TransactionDetailMembership {
 
     private Integer userId;
 
+    private String membershipName;
+
     public Timestamp getExpiration() {
         LocalDateTime localDateTime = LocalDateTime.now();
         if (typeDuration.equalsIgnoreCase("Minutes")){

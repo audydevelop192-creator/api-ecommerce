@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ProductUpdateAction extends ActionAbstract<ProductUpdateRequest> {
 
-    private final ProductDao productDao = new ProductDao();
+    private static final ProductDao productDao = new ProductDao();
 
     @Override
     protected boolean isLogin() {

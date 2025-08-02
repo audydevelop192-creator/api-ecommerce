@@ -61,10 +61,6 @@ public class CartCreateAction extends ActionAbstract<CartCreateRequest> {
             }
         }
 
-
-
-
-
         Cart cart = new Cart();
         cart.setUserId(authDto.getUserId());
         cart.setProductId(request.getProductId());

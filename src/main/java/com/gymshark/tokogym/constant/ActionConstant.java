@@ -32,6 +32,7 @@ public class ActionConstant {
     public static final String TRANSACTION_HISTORY_DETAIL = "transactionHistoryDetail";
     public static final String CREATE_TRANSACTION_MEMBERSHIP = "createTransactionMembership";
     public static final String TRANSACTION_CHANGE_STATUS_MEMBERSHIP = "transactionChangeStatusMembership";
+    public static final String TRANSACTION_DETAIL_MEMBERSHIP = "transactionDetailMembership";
 
 
 }

@@ -43,4 +43,26 @@ public class TransactionMembershipDetailDao {
         });
         return transactionDetailMembershipList.isEmpty() ? null : transactionDetailMembershipList.getFirst();
     }
+
+    public List<TransactionDetailMembership> findAll(Integer transactionId) {
+        String query = "select t.user_id , tr.id,tr.transaction_id,mb.duration,mb.type_duration, tr.membership_id, mb.name " +
+                "from transaction_detail_membership tr join membership mb on mb.id = tr.membership_id " +
+                "join toko_gym.transaction t on tr.transaction_id = t.id "+
+                "where tr.transaction_id = ?";
+        List<TransactionDetailMembership> transactionDetailMembershipList = template.query(query, new Object[]{transactionId}, new RowMapper<TransactionDetailMembership>() {
+            @Override
+            public TransactionDetailMembership mapRow(ResultSet rs, int rowNum) throws SQLException {
+                TransactionDetailMembership transactionDetail = new TransactionDetailMembership();
+                transactionDetail.setId(rs.getInt("id"));
+                transactionDetail.setDuration(rs.getInt("duration"));
+                transactionDetail.setTypeDuration(rs.getString("type_duration"));
+                transactionDetail.setTransactionId(rs.getInt("transaction_id"));
+                transactionDetail.setMembershipId(rs.getInt("membership_id"));
+                transactionDetail.setUserId(rs.getInt("user_id"));
+                transactionDetail.setMembershipName(rs.getString("name"));
+                return transactionDetail;
+            }
+        });
+        return transactionDetailMembershipList;
+    }
 }

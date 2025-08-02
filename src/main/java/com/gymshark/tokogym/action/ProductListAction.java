@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProductListAction extends ActionAbstract<ProductListRequest>{
 
-    private final ProductDao productDao = new ProductDao();
+    private static final ProductDao productDao = new ProductDao();
 
     @Override
     protected boolean isLogin() {

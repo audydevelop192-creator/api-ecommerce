@@ -11,7 +11,7 @@ import com.gymshark.tokogym.model.Profile;
 
 public class ProfileAction extends ActionAbstract<ProfileRequest>{
 
-    private final UserDao userDao = new UserDao();
+    private static final UserDao userDao = new UserDao();
 
     @Override
     protected boolean isLogin() {
@@ -31,6 +31,7 @@ public class ProfileAction extends ActionAbstract<ProfileRequest>{
         profileResponse.setExpiredDate(profile.getExpiredDate());
         profileResponse.setMembershipName(profile.getMembershipName());
         profileResponse.setMembershipRef(profile.getMembershipRef());
+        profileResponse.setMessage("Berhasil Mendapatkan Data");
         return profileResponse;
     }
 

@@ -62,4 +62,14 @@ public class TransactionController {
         actionDto.setToken(token);
         return actionFactory.process(ActionConstant.TRANSACTION_HISTORY_DETAIL, actionDto);
     }
+
+    @GetMapping("/transactionDetailMembership")
+    public DefaultResponse transactionDetailMembership(@RequestBody String request,
+                                                    @RequestHeader(name = "x-auth", required = false)
+                                                    String token) {
+        ActionDto actionDto = new ActionDto();
+        actionDto.setData(request);
+        actionDto.setToken(token);
+        return actionFactory.process(ActionConstant.TRANSACTION_DETAIL_MEMBERSHIP, actionDto);
+    }
 }

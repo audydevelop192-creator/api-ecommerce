@@ -10,7 +10,7 @@ import com.gymshark.tokogym.util.SHA256Util;
 
 public class RegisterAction extends ActionAbstract<RegisterRequest> {
 
-    private final UserDao userDao = new UserDao();
+    private static final UserDao userDao = new UserDao();
 
     protected RegisterAction() {
         super(RegisterRequest.class);

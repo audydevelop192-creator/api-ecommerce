@@ -15,11 +15,11 @@ import java.util.List;
 
 public class ProductCreateAction extends ActionAbstract<ProductCreateRequest> {
 
-    private final ProductDao productDao = new ProductDao();
+    private static final ProductDao productDao = new ProductDao();
 
-    private final SupplierDao supplierDao = new SupplierDao();
+    private static final SupplierDao supplierDao = new SupplierDao();
 
-    private final HistoryStockDao historyStockDao = new HistoryStockDao();
+    private static final HistoryStockDao historyStockDao = new HistoryStockDao();
 
 
     @Override
