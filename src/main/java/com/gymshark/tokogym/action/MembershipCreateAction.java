@@ -71,7 +71,7 @@ public class MembershipCreateAction extends ActionAbstract<MembershipCreateReque
         }
 
         if (request.getDescription() == null) {
-            membershipCreateResponse.setMessage("Ddeskripsi Wajib diisi");
+            membershipCreateResponse.setMessage("Deskripsi Wajib diisi");
             return membershipCreateResponse;
         }
 

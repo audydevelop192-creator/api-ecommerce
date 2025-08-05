@@ -23,7 +23,7 @@ public class CreateTransactionMembershipController {
         return actionFactory.process(ActionConstant.CREATE_TRANSACTION_MEMBERSHIP, actionDto);
     }
 
-    @PostMapping("/transactionChangeMembershipAction")
+    @PostMapping("/transactionChangeMembership")
     public DefaultResponse transactionChangeMembershipAction(@RequestBody String request,
                                                        @RequestHeader(name = "x-auth", required = false)
                                                        String token) {

@@ -53,7 +53,7 @@ public class ProductController {
         return actionFactory.process(ActionConstant.PRODUCT_LIST, actionDto);
     }
 
-    @GetMapping("/productDelete")
+    @PostMapping("/productDelete")
     public DefaultResponse productDelete(@RequestBody String request,
                                        @RequestHeader(name = "x-auth", required = false)
                                        String token) {
