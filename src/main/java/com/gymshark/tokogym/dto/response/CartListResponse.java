@@ -3,6 +3,7 @@ package com.gymshark.tokogym.dto.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,9 @@ public class CartListResponse extends DefaultResponse{
 
         private Integer quantity;
 
+        private String productName;
+
+        private BigDecimal price;
 
     }
 }

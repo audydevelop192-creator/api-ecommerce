@@ -33,6 +33,10 @@ public class ActionConstant {
     public static final String CREATE_TRANSACTION_MEMBERSHIP = "createTransactionMembership";
     public static final String TRANSACTION_CHANGE_STATUS_MEMBERSHIP = "transactionChangeStatusMembership";
     public static final String TRANSACTION_DETAIL_MEMBERSHIP = "transactionDetailMembership";
+    public static final String CREATE_TRANSACTION_PURCHASE = "createTransactionPurchase";
+    public static final String CHANGE_TRANSACTION_PURCHASE = "changeTransactionPurchase";
+    public static final String REPORT_HISTORY_STOCK = "reportHistoryStock";
+    public static final String TRANSACTION_REPORT = "transactionReport";
 
 
 }

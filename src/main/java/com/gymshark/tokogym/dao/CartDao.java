@@ -65,7 +65,7 @@ public class CartDao {
     }
 
     public List<Cart> findByUserId(int userId) {
-        String query = "SELECT cart.id,cart.user_id,cart.product_id,cart.quantity, product.current_stock, product.name, product.price from cart join product on product.id = cart.product_id  where user_id=? and is_deleted=0;";
+        String query = "SELECT cart.id,cart.user_id,cart.product_id,cart.quantity, product.current_stock, product.name, product.selling_price as price from cart join product on product.id = cart.product_id  where user_id=? and is_deleted=0;";
 
         return template.query(query, new Object[]{userId}, new RowMapper<Cart>() {
             @Override

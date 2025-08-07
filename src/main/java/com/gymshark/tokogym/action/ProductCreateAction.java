@@ -87,6 +87,7 @@ public class ProductCreateAction extends ActionAbstract<ProductCreateRequest> {
         historyStock.setProductId(productId);
         historyStock.setStartStock(0);
         historyStock.setUpdateStock(request.getCurrentStock());
+        historyStock.setDescription("Stock Awal");
         historyStock.setEndStock(request.getCurrentStock());
         historyStockDao.insertHistory(historyStock);
         productCreateResponse.setMessage("Berhasil Membuat Product");

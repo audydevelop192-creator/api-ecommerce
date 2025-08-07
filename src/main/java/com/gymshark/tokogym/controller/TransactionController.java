@@ -72,4 +72,24 @@ public class TransactionController {
         actionDto.setToken(token);
         return actionFactory.process(ActionConstant.TRANSACTION_DETAIL_MEMBERSHIP, actionDto);
     }
+
+    @PostMapping("/createTransactionPurchase")
+    public DefaultResponse createTransactionPurchase(@RequestBody String request,
+                                                    @RequestHeader(name = "x-auth", required = false)
+                                                    String token) {
+        ActionDto actionDto = new ActionDto();
+        actionDto.setData(request);
+        actionDto.setToken(token);
+        return actionFactory.process(ActionConstant.CREATE_TRANSACTION_PURCHASE, actionDto);
+    }
+
+    @PostMapping("/changeTransactionPurchase")
+    public DefaultResponse changeTransactionPurchase(@RequestBody String request,
+                                                    @RequestHeader(name = "x-auth", required = false)
+                                                    String token) {
+        ActionDto actionDto = new ActionDto();
+        actionDto.setData(request);
+        actionDto.setToken(token);
+        return actionFactory.process(ActionConstant.CHANGE_TRANSACTION_PURCHASE, actionDto);
+    }
 }

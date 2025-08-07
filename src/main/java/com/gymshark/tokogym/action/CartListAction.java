@@ -38,6 +38,8 @@ public class CartListAction extends ActionAbstract<CartListRequest>{
             cartList.setUserId(cart.getUserId());
             cartList.setProductId(cart.getProductId());
             cartList.setQuantity(cart.getQuantity());
+            cartList.setProductName(cart.getProductName());
+            cartList.setPrice(cart.getPrice());
 
             cartListResponse.getCartLists().add(cartList);
         }

@@ -40,6 +40,10 @@ public class ActionFactory {
             case ActionConstant.CREATE_TRANSACTION_MEMBERSHIP -> new CreateTransactionMembershipAction();
             case ActionConstant.TRANSACTION_CHANGE_STATUS_MEMBERSHIP -> new TransactionChangeStatusMembershipAction();
             case ActionConstant.TRANSACTION_DETAIL_MEMBERSHIP -> new TransactionDetailMembershipAction();
+            case ActionConstant.CREATE_TRANSACTION_PURCHASE -> new CreateTransactionPurchaseAction();
+            case ActionConstant.CHANGE_TRANSACTION_PURCHASE -> new ChangeTransactionPurchaseAction();
+            case ActionConstant.REPORT_HISTORY_STOCK -> new ReportHistoryStockAction();
+            case ActionConstant.TRANSACTION_REPORT -> new TransactionReportAction();
 
             default -> throw new IllegalStateException("Unexpected value: " + action);
         };
