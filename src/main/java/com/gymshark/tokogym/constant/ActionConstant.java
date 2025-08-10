@@ -37,6 +37,7 @@ public class ActionConstant {
     public static final String CHANGE_TRANSACTION_PURCHASE = "changeTransactionPurchase";
     public static final String REPORT_HISTORY_STOCK = "reportHistoryStock";
     public static final String TRANSACTION_REPORT = "transactionReport";
+    public static final String TRACKING_TRANSACTION = "trackingTransaction";
 
 
 }

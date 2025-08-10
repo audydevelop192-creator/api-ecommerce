@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ public class TransactionDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         template.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[] { "id" }); // "id" adalah nama kolom primary key
+            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"}); // "id" adalah nama kolom primary key
             ps.setString(1, transaction.getTransactionNumber());
             ps.setInt(2, transaction.getUserId());
             ps.setBigDecimal(3, transaction.getTotalPrice());
@@ -39,7 +40,7 @@ public class TransactionDao {
         return keyHolder.getKey().intValue(); // ini adalah ID hasil auto-increment
     }
 
-    public boolean isUserHaveTransactionPending(Integer userId){
+    public boolean isUserHaveTransactionPending(Integer userId) {
 
         String query = "SELECT COUNT(*) FROM transaction WHERE status = 1 and user_id=?";
 
@@ -47,7 +48,7 @@ public class TransactionDao {
         return count > 0;
     }
 
-    public boolean findByTransactionIdPending(Integer id){
+    public boolean findByTransactionIdPending(Integer id) {
 
         String query = "SELECT COUNT(*) FROM transaction WHERE status = 1 and id=?";
 
@@ -91,7 +92,7 @@ public class TransactionDao {
         return rows > 0;
     }
 
-    public List<TransactionHistory>findTransactionHistoryAll(){
+    public List<TransactionHistory> findTransactionHistoryAll() {
 
         String query = "SELECT transaction.transaction_number, transaction.id, transaction.total_price, payment.account_name, payment.account_number, payment.account_bank, transaction.type, transaction.status , transaction.created_at, user.email,transaction.tracking_number\n" +
                 "from transaction\n" +
@@ -118,7 +119,7 @@ public class TransactionDao {
         });
     }
 
-    public List<TransactionHistory>findTransactionHistoryByUserId(Integer id){
+    public List<TransactionHistory> findTransactionHistoryByUserId(Integer id) {
 
         String query = "SELECT transaction.transaction_number, transaction.id, transaction.total_price, payment.account_name, payment.account_number, payment.account_bank, transaction.status , transaction.created_at, user.email,transaction.tracking_number\n" +
                 "from transaction\n" +
@@ -142,6 +143,23 @@ public class TransactionDao {
                 return histories1;
             }
         });
+    }
+
+    public Transaction getTrackingNumberByTransactionId(Integer transactionId) {
+        String query = "SELECT tracking_number FROM transaction WHERE id = ?";
+        List<Transaction> transactions = template.query(query, new Object[]{transactionId}, new RowMapper<Transaction>() {
+            @Override
+            public Transaction mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Transaction transaction = new Transaction();
+                transaction.setTrackingNumber(rs.getString("tracking_number"));
+                return transaction;
+            }
+        });
+        if (transactions.isEmpty()) {
+            return null;
+        } else {
+            return transactions.getFirst();
+        }
     }
 
 

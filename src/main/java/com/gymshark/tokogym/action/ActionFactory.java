@@ -44,6 +44,7 @@ public class ActionFactory {
             case ActionConstant.CHANGE_TRANSACTION_PURCHASE -> new ChangeTransactionPurchaseAction();
             case ActionConstant.REPORT_HISTORY_STOCK -> new ReportHistoryStockAction();
             case ActionConstant.TRANSACTION_REPORT -> new TransactionReportAction();
+            case ActionConstant.TRACKING_TRANSACTION -> new TrackingTransactionAction();
 
             default -> throw new IllegalStateException("Unexpected value: " + action);
         };
