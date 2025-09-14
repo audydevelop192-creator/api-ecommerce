@@ -4,6 +4,7 @@ import com.ecommerce.api.dto.request.RegisterRequest;
 import com.ecommerce.api.dto.response.BaseResponse;
 import com.ecommerce.api.dto.response.RegisterResponse;
 import com.ecommerce.api.model.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Service
 public class AuthService {
     private final AuthRepository authRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public AuthService(AuthRepository authRepository) {
         this.authRepository = authRepository;
@@ -29,7 +31,7 @@ public class AuthService {
 
         User newUser = new User();
         newUser.setUsername(request.getUsername());
-        newUser.setPassword(request.getPassword());
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         newUser.setEmail(request.getEmail());
 
         int result = authRepository.register(newUser);
