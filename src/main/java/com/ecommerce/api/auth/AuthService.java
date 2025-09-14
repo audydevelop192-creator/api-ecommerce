@@ -37,8 +37,8 @@ public class AuthService {
         User newUser = new User();
         newUser.setUsername(request.getUsername());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        newUser.setEmail(request.getEmail());
-
+        newUser.setEmail(request.getEmail().toLowerCase());
+        newUser.setRole(request.getRole().toUpperCase());
         int result = authRepository.register(newUser);
         if (result > 0) {
             RegisterResponse data = new RegisterResponse(
