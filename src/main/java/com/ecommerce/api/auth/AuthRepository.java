@@ -28,6 +28,11 @@ public class AuthRepository {
         return jdbcTemplate.queryForObject(sql, new Object[]{username}, new UserRowMapper());
     }
 
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
+    }
+
     // RowMapper untuk User
     static class UserRowMapper implements RowMapper<User> {
         @Override

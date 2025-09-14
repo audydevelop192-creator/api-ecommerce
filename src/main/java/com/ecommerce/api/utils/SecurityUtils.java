@@ -8,7 +8,7 @@ public class SecurityUtils {
     /**
      * Ambil userId dari SecurityContext
      */
-    public static Long getCurrentUserId() {
+    public static Integer getCurrentUserId() {
         AuthenticatedUser authUser = getCurrentUser();
         return authUser != null ? authUser.getUserId() : null;
     }

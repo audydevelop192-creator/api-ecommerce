@@ -8,5 +8,6 @@ import lombok.Setter;
 public class AuthenticatedUser {
     private String username;
     private String role;
-    private Long userId;
+    private String email;
+    private Integer userId;
 }

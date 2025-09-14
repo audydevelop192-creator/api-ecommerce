@@ -1,9 +1,12 @@
 package com.ecommerce.api.auth;
 
+import com.ecommerce.api.dto.request.LoginRequest;
 import com.ecommerce.api.dto.request.RegisterRequest;
 import com.ecommerce.api.dto.response.BaseResponse;
+import com.ecommerce.api.dto.response.LoginResponse;
 import com.ecommerce.api.dto.response.RegisterResponse;
 import com.ecommerce.api.model.User;
+import com.ecommerce.api.utils.JwtUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,11 @@ import java.time.LocalDateTime;
 public class AuthService {
     private final AuthRepository authRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final JwtUtils jwtUtils;
 
-    public AuthService(AuthRepository authRepository) {
+    public AuthService(AuthRepository authRepository, JwtUtils jwtUtils) {
         this.authRepository = authRepository;
+        this.jwtUtils = jwtUtils;
     }
 
     public BaseResponse<RegisterResponse> register(RegisterRequest request) {
@@ -48,4 +53,17 @@ public class AuthService {
         }
     }
 
+    public BaseResponse<LoginResponse> login(LoginRequest request) {
+        if (request.getPassword() == null || request.getEmail() == null) {
+            return new BaseResponse<>("error", "password and email are required", null);
+        }
+        User existing = authRepository.findByUsername(request.getEmail());
+        if (existing != null && passwordEncoder.matches(request.getPassword(), existing.getPassword())) {
+            String token = jwtUtils.generateToken(existing.getId(), existing.getUsername(), existing.getRole(), existing.getEmail());
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setToken(token);
+            return new BaseResponse<>("success", "Login successful", loginResponse);
+        }
+        return new BaseResponse<>("error", "invalid Email Or Password", null);
+    }
 }

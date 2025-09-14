@@ -16,11 +16,12 @@ public class JwtUtils {
     private long jwtExpirationMs;
 
     // Generate token
-    public String generateToken(Long userId, String username, String role) {
+    public String generateToken(Integer userId, String username, String role,String email) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("userId", userId)
                 .claim("role", role)
+                .claim("email", email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -43,12 +44,20 @@ public class JwtUtils {
                 .get("role");
     }
 
-    public Long getUserIdFromToken(String token) {
+    public String getEmailFromToken(String token) {
+        return (String) Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("email");
+    }
+
+    public Integer getUserIdFromToken(String token) {
         return ((Number) Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("userId")).longValue();
+                .get("userId")).intValue();
     }
 
     public boolean validateToken(String token) {
