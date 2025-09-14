@@ -18,8 +18,8 @@ public class AuthRepository {
 
     // Insert User
     public int register(User user) {
-        String sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail());
+        String sql = "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)";
+        return jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail(), user.getRole());
     }
 
     // Get User by Username
