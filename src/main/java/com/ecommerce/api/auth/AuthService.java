@@ -57,7 +57,7 @@ public class AuthService {
         if (request.getPassword() == null || request.getEmail() == null) {
             return new BaseResponse<>("error", "password and email are required", null);
         }
-        User existing = authRepository.findByUsername(request.getEmail());
+        User existing = authRepository.findByEmail(request.getEmail());
         if (existing != null && passwordEncoder.matches(request.getPassword(), existing.getPassword())) {
             String token = jwtUtils.generateToken(existing.getId(), existing.getUsername(), existing.getRole(), existing.getEmail());
             LoginResponse loginResponse = new LoginResponse();
