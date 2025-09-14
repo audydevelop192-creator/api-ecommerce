@@ -8,11 +8,11 @@
         <version>3.5.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.gymshark</groupId>
-    <artifactId>tokoGym</artifactId>
+    <groupId>com.ecommerce</groupId>
+    <artifactId>api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>tokoGym</name>
-    <description>tokoGym</description>
+    <name>ecommerceapi</name>
+    <description>ecommerce api</description>
     <url/>
     <licenses>
         <license/>
