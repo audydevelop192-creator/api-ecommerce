@@ -42,6 +42,7 @@ public class AuthRepository {
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
             user.setEmail(rs.getString("email"));
+            user.setRole(rs.getString("role"));
             return user;
         }
     }
