@@ -2,13 +2,17 @@ package com.ecommerce.api.product;
 
 import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddProductRequest;
+import com.ecommerce.api.dto.request.ListProductRequest;
 import com.ecommerce.api.dto.response.AddProductResponse;
 import com.ecommerce.api.dto.response.BaseResponse;
+import com.ecommerce.api.dto.response.ListProductResponse;
 import com.ecommerce.api.model.Products;
 import com.ecommerce.api.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -19,22 +23,23 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    //ADD PRODUCT
     public BaseResponse<AddProductResponse> addProduct(AddProductRequest request) {
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
 
-        if(!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")){
+        if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")) {
             return new BaseResponse<>("error", "Invalid user access", null);
         }
 
-        if (request.getName() == null){
+        if (request.getName() == null) {
             return new BaseResponse<>("error", "name is required", null);
         }
 
-        if (request.getPrice().compareTo(BigDecimal.ZERO) < 0){
+        if (request.getPrice().compareTo(BigDecimal.ZERO) < 0) {
             return new BaseResponse<>("error", "the price cannot be less than zero ", null);
         }
 
-        if (request.getStock() <= 0){
+        if (request.getStock() <= 0) {
             return new BaseResponse<>("error", "stock cannot be smaller than zero", null);
         }
 
@@ -51,4 +56,29 @@ public class ProductService {
         addProductResponse.setStock(request.getStock());
         return new BaseResponse<AddProductResponse>("Succces", "Product added successfully", addProductResponse);
     }
+
+    //LIST PRODUCT
+    public BaseResponse<ListProductResponse> listProduct(ListProductRequest request) {
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        List<Products> products = productRepository.findAll();
+
+        ListProductResponse listProductResponse = new ListProductResponse();
+
+        for (Products product : products) {
+            ListProductResponse.ListProduct productList = new ListProductResponse.ListProduct();
+            productList.setId(product.getId());
+            productList.setName(product.getName());
+            productList.setPrice(product.getPrice());
+            productList.setStock(product.getStock());
+
+            listProductResponse.getProdductList().add(productList);
+        }
+
+        return new BaseResponse<ListProductResponse>("success", "Products retrieved successfully", listProductResponse);
+    }
+
 }
