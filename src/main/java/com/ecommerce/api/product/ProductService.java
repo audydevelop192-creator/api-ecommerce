@@ -3,15 +3,16 @@ package com.ecommerce.api.product;
 import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddProductRequest;
 import com.ecommerce.api.dto.request.ListProductRequest;
+import com.ecommerce.api.dto.request.UpdateProductRequest;
 import com.ecommerce.api.dto.response.AddProductResponse;
 import com.ecommerce.api.dto.response.BaseResponse;
 import com.ecommerce.api.dto.response.ListProductResponse;
+import com.ecommerce.api.dto.response.UpdateProductResponse;
 import com.ecommerce.api.model.Products;
 import com.ecommerce.api.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +27,10 @@ public class ProductService {
     //ADD PRODUCT
     public BaseResponse<AddProductResponse> addProduct(AddProductRequest request) {
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
 
         if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")) {
             return new BaseResponse<>("error", "Invalid user access", null);
@@ -81,4 +86,46 @@ public class ProductService {
         return new BaseResponse<ListProductResponse>("success", "Products retrieved successfully", listProductResponse);
     }
 
+    //UPDATE PRODUCT
+    public BaseResponse<UpdateProductResponse> updateProduct(Integer id, UpdateProductRequest request){
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")) {
+            return new BaseResponse<>("error", "Invalid user access", null);
+        }
+
+        Products product = productRepository.findById(id);
+        if (product == null){
+            return new BaseResponse<>("error", "Product not found", null);
+        }
+
+        if (request.getName() == null){
+            return new BaseResponse<>("error", "Name is required", null);
+        }
+
+        if (request.getPrice().compareTo(BigDecimal.ZERO) < 0){
+            return new BaseResponse<>("error", "the price cannot be less than zero", null);
+        }
+
+        if (request.getStock() <= 0){
+            return new BaseResponse<>("error", "stock cannot be smaller than zero", null);
+        }
+
+
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        product.setStock(request.getStock());
+        productRepository.updateProduct(product);
+
+        UpdateProductResponse updateProductResponse = new UpdateProductResponse();
+        updateProductResponse.setId(product.getId());
+        updateProductResponse.setName(product.getName());
+        updateProductResponse.setPrice(product.getPrice());
+        updateProductResponse.setStock(product.getStock());
+        return new BaseResponse<>("success", "Product updated successfully", updateProductResponse);
+    }
 }
