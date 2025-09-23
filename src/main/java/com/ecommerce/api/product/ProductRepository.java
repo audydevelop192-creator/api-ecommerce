@@ -1,7 +1,6 @@
 package com.ecommerce.api.product;
 
 import com.ecommerce.api.model.Products;
-import com.ecommerce.api.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -24,7 +23,8 @@ public class ProductRepository {
         return jdbcTemplate.update(sql, products.getName(), products.getDescription(), products.getPrice(), products.getStock());
     }
 
-    public List<Products> findAll(){
+    //List Product
+    public List<Products> findAll() {
         String sql = "SELECT id,name,price,stock from products;";
         return jdbcTemplate.query(sql, new Object[]{}, new RowMapper<Products>() {
             @Override
@@ -37,6 +37,39 @@ public class ProductRepository {
                 return products;
             }
         });
+    }
+
+    //Update Product
+    public void updateProduct(Products products) {
+        String sql = "UPDATE products SET name =?, price=?, stock=? where id=?;";
+
+        jdbcTemplate.update(sql,
+                products.getName(),
+                products.getPrice(),
+                products.getStock(),
+                products.getId()
+        );
+
+    }
+
+    public Products findById(Integer id) {
+        String sql = "SELECT id,name,price,stock from products where id=?";
+        List<Products> products = jdbcTemplate.query(sql, new Object[]{id}, new RowMapper<Products>() {
+            @Override
+            public Products mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Products product = new Products();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setPrice(rs.getBigDecimal("price"));
+                product.setStock(rs.getInt("stock"));
+                return product;
+            }
+        });
+        if (products.isEmpty()){
+            return null;
+        }else {
+          return products.getFirst();
+        }
     }
 
 }

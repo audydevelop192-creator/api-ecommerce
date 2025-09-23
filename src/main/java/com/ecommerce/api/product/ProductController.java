@@ -3,10 +3,8 @@ package com.ecommerce.api.product;
 import com.ecommerce.api.dto.request.AddProductRequest;
 import com.ecommerce.api.dto.request.ListProductRequest;
 import com.ecommerce.api.dto.request.RegisterRequest;
-import com.ecommerce.api.dto.response.AddProductResponse;
-import com.ecommerce.api.dto.response.BaseResponse;
-import com.ecommerce.api.dto.response.ListProductResponse;
-import com.ecommerce.api.dto.response.RegisterResponse;
+import com.ecommerce.api.dto.request.UpdateProductRequest;
+import com.ecommerce.api.dto.response.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +27,13 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<BaseResponse<ListProductResponse>> listProduct(@RequestBody ListProductRequest request){
         BaseResponse<ListProductResponse> response = productService.listProduct(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponse<UpdateProductResponse>> updateProduct(@RequestBody UpdateProductRequest request,
+                                                                             @PathVariable Integer id){
+        BaseResponse<UpdateProductResponse> response = productService.updateProduct(id,request);
         return ResponseEntity.ok(response);
     }
 }
