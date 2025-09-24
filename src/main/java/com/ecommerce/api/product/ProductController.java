@@ -41,4 +41,11 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BaseResponse<ProductDetailResponse>> productDetail(@PathVariable Integer id) {
+        BaseResponse<ProductDetailResponse> response = productService.viewProductDetail(id);
+        return ResponseEntity.ok(response);
+    }
+
+
 }
