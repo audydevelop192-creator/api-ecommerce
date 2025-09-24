@@ -1,10 +1,7 @@
 package com.ecommerce.api.product;
 
 import com.ecommerce.api.config.AuthenticatedUser;
-import com.ecommerce.api.dto.request.AddProductRequest;
-import com.ecommerce.api.dto.request.DeleteProductRequest;
-import com.ecommerce.api.dto.request.ListProductRequest;
-import com.ecommerce.api.dto.request.UpdateProductRequest;
+import com.ecommerce.api.dto.request.*;
 import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.model.Products;
 import com.ecommerce.api.utils.SecurityUtils;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -150,5 +148,33 @@ public class ProductService {
         deleteProductResponse.setId(id);
 
         return new BaseResponse<>("success", "Product deleted successfully", deleteProductResponse);
+    }
+
+    //VIEW PRODUCT DETAIL
+    public BaseResponse<ProductDetailResponse> viewProductDetail(Integer id) {
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        Optional<Products> products = productRepository.findProductDetailById(id);
+
+        if (products.isEmpty()){
+            return new BaseResponse<>("error", "Product not found", null);
+        }
+
+        Products product = products.get();
+
+        ProductDetailResponse productDetailResponse = new ProductDetailResponse();
+        ProductDetailResponse.ProductDetail productDetail = new ProductDetailResponse.ProductDetail();
+        productDetail.setId(product.getId());
+        productDetail.setName(product.getName());
+        productDetail.setDescription(product.getDescription());
+        productDetail.setPrice(product.getPrice());
+        productDetail.setStock(product.getStock());
+
+        productDetailResponse.getProductDetails().add(productDetail);
+
+        return new BaseResponse<ProductDetailResponse>("success", "Products retrieved successfully", productDetailResponse);
     }
 }

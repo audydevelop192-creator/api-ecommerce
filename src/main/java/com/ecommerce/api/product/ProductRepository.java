@@ -1,6 +1,7 @@
 package com.ecommerce.api.product;
 
 import com.ecommerce.api.model.Products;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductRepository {
@@ -65,24 +67,47 @@ public class ProductRepository {
                 return product;
             }
         });
-        if (products.isEmpty()){
+        if (products.isEmpty()) {
             return null;
-        }else {
-          return products.getFirst();
+        } else {
+            return products.getFirst();
         }
     }
 
-    public void deleteProduct(Integer id){
+    public void deleteProduct(Integer id) {
         String sql = "DELETE from products where id=?";
 
         jdbcTemplate.update(sql, id);
     }
 
-    public boolean isIdExist(Integer id){
+    public boolean isIdExist(Integer id) {
         String query = "SELECT COUNT(*) FROM products WHERE id = ? ";
         Integer count = jdbcTemplate.queryForObject(query, Integer.class, id);
         return count > 0;
     }
 
+    public Optional<Products> findProductDetailById(Integer id) {
+        String sql = "SELECT id,name,description,price,stock from products where id= ?";
+
+        try {
+            Products products = jdbcTemplate.queryForObject(sql, new Object[]{id}, new RowMapper<Products>() {
+                @Override
+                public Products mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    Products products = new Products();
+                    products.setId(rs.getInt("id"));
+                    products.setName(rs.getString("name"));
+                    products.setDescription(rs.getString("description"));
+                    products.setPrice(rs.getBigDecimal("price"));
+                    products.setStock(rs.getInt("stock"));
+                    return products;
+                }
+            });
+
+            return Optional.ofNullable(products);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
+    }
 }
 
