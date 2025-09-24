@@ -72,5 +72,17 @@ public class ProductRepository {
         }
     }
 
+    public void deleteProduct(Integer id){
+        String sql = "DELETE from products where id=?";
+
+        jdbcTemplate.update(sql, id);
+    }
+
+    public boolean isIdExist(Integer id){
+        String query = "SELECT COUNT(*) FROM products WHERE id = ? ";
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class, id);
+        return count > 0;
+    }
+
 }
 
