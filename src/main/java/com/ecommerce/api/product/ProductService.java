@@ -2,12 +2,10 @@ package com.ecommerce.api.product;
 
 import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddProductRequest;
+import com.ecommerce.api.dto.request.DeleteProductRequest;
 import com.ecommerce.api.dto.request.ListProductRequest;
 import com.ecommerce.api.dto.request.UpdateProductRequest;
-import com.ecommerce.api.dto.response.AddProductResponse;
-import com.ecommerce.api.dto.response.BaseResponse;
-import com.ecommerce.api.dto.response.ListProductResponse;
-import com.ecommerce.api.dto.response.UpdateProductResponse;
+import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.model.Products;
 import com.ecommerce.api.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
@@ -87,7 +85,7 @@ public class ProductService {
     }
 
     //UPDATE PRODUCT
-    public BaseResponse<UpdateProductResponse> updateProduct(Integer id, UpdateProductRequest request){
+    public BaseResponse<UpdateProductResponse> updateProduct(Integer id, UpdateProductRequest request) {
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
 
         if (authenticatedUser == null) {
@@ -99,19 +97,19 @@ public class ProductService {
         }
 
         Products product = productRepository.findById(id);
-        if (product == null){
+        if (product == null) {
             return new BaseResponse<>("error", "Product not found", null);
         }
 
-        if (request.getName() == null){
+        if (request.getName() == null) {
             return new BaseResponse<>("error", "Name is required", null);
         }
 
-        if (request.getPrice().compareTo(BigDecimal.ZERO) < 0){
+        if (request.getPrice().compareTo(BigDecimal.ZERO) < 0) {
             return new BaseResponse<>("error", "the price cannot be less than zero", null);
         }
 
-        if (request.getStock() <= 0){
+        if (request.getStock() <= 0) {
             return new BaseResponse<>("error", "stock cannot be smaller than zero", null);
         }
 
@@ -127,5 +125,30 @@ public class ProductService {
         updateProductResponse.setPrice(product.getPrice());
         updateProductResponse.setStock(product.getStock());
         return new BaseResponse<>("success", "Product updated successfully", updateProductResponse);
+    }
+
+    //DELETE PRODUCT
+    public BaseResponse<DeleteProductResponse> deleteProduct(Integer id, DeleteProductRequest request) {
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")) {
+            return new BaseResponse<>("error", "Invalid user access", null);
+        }
+
+        boolean exist = productRepository.isIdExist(id);
+        if (!exist){
+            return new BaseResponse<>("error", "Product not found", null);
+        }
+
+        productRepository.deleteProduct(id);
+
+        DeleteProductResponse deleteProductResponse = new DeleteProductResponse();
+        deleteProductResponse.setId(id);
+
+        return new BaseResponse<>("success", "Product deleted successfully", deleteProductResponse);
     }
 }
