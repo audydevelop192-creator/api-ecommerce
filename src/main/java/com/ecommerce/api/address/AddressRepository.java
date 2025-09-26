@@ -2,12 +2,16 @@ package com.ecommerce.api.address;
 
 import com.ecommerce.api.model.Address;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class AddressRepository {
@@ -46,5 +50,23 @@ public class AddressRepository {
     public void resetDefault(int userId) {
         String sql = "UPDATE user_addresses SET is_default = false WHERE user_id = ?";
         jdbcTemplate.update(sql, userId);
+    }
+    public List<Address> findAll() {
+
+        String sql = "select id,recipient_name,phone_number,address_line,city,postal_code,is_default from user_addresses";
+        return jdbcTemplate.query(sql, new Object[]{}, new RowMapper<Address>() {
+            @Override
+            public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Address address = new Address();
+                address.setId(rs.getInt("id"));
+                address.setRecipientName(rs.getString("recipient_name"));
+                address.setPhoneNumber(rs.getString("phone_number"));
+                address.setAddressLine(rs.getString("address_line"));
+                address.setCity(rs.getString("city"));
+                address.setPostalCode(rs.getString("postal_code"));
+                address.setDefault(rs.getBoolean("is_default"));
+                return address;
+            }
+        });
     }
 }
