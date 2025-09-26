@@ -1,6 +1,7 @@
 package com.ecommerce.api.address;
 
 import com.ecommerce.api.model.Address;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AddressRepository {
@@ -53,12 +55,13 @@ public class AddressRepository {
     }
     public List<Address> findAll() {
 
-        String sql = "select id,recipient_name,phone_number,address_line,city,postal_code,is_default from user_addresses";
+        String sql = "select id,user_id,recipient_name,phone_number,address_line,city,postal_code,is_default from user_addresses";
         return jdbcTemplate.query(sql, new Object[]{}, new RowMapper<Address>() {
             @Override
             public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
                 Address address = new Address();
                 address.setId(rs.getInt("id"));
+                address.setUserId(rs.getInt("user_id"));
                 address.setRecipientName(rs.getString("recipient_name"));
                 address.setPhoneNumber(rs.getString("phone_number"));
                 address.setAddressLine(rs.getString("address_line"));
@@ -68,5 +71,39 @@ public class AddressRepository {
                 return address;
             }
         });
+    }
+    public int updateAddress(Address address) {
+
+        String sql = "update user_addresses set recipient_name=?,phone_number=?,address_line=?,city=?,postal_code=?,is_default=? where id=?;";
+        return jdbcTemplate.update(sql,address.getRecipientName(),
+                address.getPhoneNumber(),
+                address.getAddressLine(),
+                address.getCity(),
+                address.getPostalCode(),
+                address.isDefault(),
+                address.getId());
+    }
+    public Optional<Address> findById(Integer id) {
+        String sql = "select id,user_id,recipient_name,phone_number,address_line,city,postal_code,is_default from user_addresses where id=?;";
+        try {
+            Address address = jdbcTemplate.queryForObject(sql,new Object[]{id},new RowMapper<Address>() {
+                @Override
+                public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    Address address = new Address();
+                    address.setId(rs.getInt("id"));
+                    address.setUserId(rs.getInt("user_id"));
+                    address.setRecipientName(rs.getString("recipient_name"));
+                    address.setPhoneNumber(rs.getString("phone_number"));
+                    address.setAddressLine(rs.getString("address_line"));
+                    address.setCity(rs.getString("city"));
+                    address.setPostalCode(rs.getString("postal_code"));
+                    address.setDefault(rs.getBoolean("is_default"));
+                    return address;
+                }
+            } );
+            return Optional.ofNullable(address);
+        }catch (EmptyResultDataAccessException e){
+            return Optional.empty();
+        }
     }
 }
