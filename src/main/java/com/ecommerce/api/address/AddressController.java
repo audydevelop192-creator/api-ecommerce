@@ -4,11 +4,10 @@ import com.ecommerce.api.auth.AuthService;
 import com.ecommerce.api.dto.request.AddAddressRequest;
 import com.ecommerce.api.dto.request.ListAddressRequest;
 import com.ecommerce.api.dto.request.RegisterRequest;
-import com.ecommerce.api.dto.response.AddAddressResponse;
-import com.ecommerce.api.dto.response.BaseResponse;
-import com.ecommerce.api.dto.response.ListAddressResponse;
-import com.ecommerce.api.dto.response.RegisterResponse;
+import com.ecommerce.api.dto.request.UpdateAddressRequest;
+import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.model.Address;
+import org.springframework.data.relational.core.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,4 +40,11 @@ public class AddressController {
         BaseResponse<ListAddressResponse> response = addressService.listAddress(request);
         return ResponseEntity.ok(response);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponse<UpdateAddressResponse>>updateAddresses(@RequestBody UpdateAddressRequest request,
+                                                                              @PathVariable Integer id) {
+        BaseResponse<UpdateAddressResponse> response = addressService.updateAddress(request,id);
+        return ResponseEntity.ok(response);
+    }
 }
+
