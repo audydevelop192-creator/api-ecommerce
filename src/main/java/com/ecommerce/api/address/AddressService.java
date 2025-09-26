@@ -1,12 +1,19 @@
 package com.ecommerce.api.address;
 
+import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddAddressRequest;
+import com.ecommerce.api.dto.request.ListAddressRequest;
 import com.ecommerce.api.dto.response.AddAddressResponse;
 import com.ecommerce.api.dto.response.BaseResponse;
+import com.ecommerce.api.dto.response.ListAddressResponse;
 import com.ecommerce.api.model.Address;
 import com.ecommerce.api.utils.JwtUtils;
+import com.ecommerce.api.utils.SecurityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AddressService {
@@ -72,4 +79,28 @@ public class AddressService {
         return new BaseResponse<>("success", "Address added successfully", response);
     }
 
+    public BaseResponse<ListAddressResponse>listAddress(ListAddressRequest request) {
+        AuthenticatedUser authenticatedUser= SecurityUtils.getCurrentUser();
+
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        List<Address> addressList=addressRepository.findAll();
+        ListAddressResponse response = new ListAddressResponse();
+        for (Address address : addressList) {
+            ListAddressResponse.AddressList addressListResponse = new ListAddressResponse.AddressList();
+            addressListResponse.setId(address.getId());
+            addressListResponse.setRecipientName(address.getRecipientName());
+            addressListResponse.setPhoneNumber(address.getPhoneNumber());
+            addressListResponse.setAddressLine(address.getAddressLine());
+            addressListResponse.setCity(address.getCity());
+            addressListResponse.setPostalCode(address.getPostalCode());
+            addressListResponse.setDefault(address.isDefault());
+            response.getAddresses().add(addressListResponse);
+        }
+
+        return new BaseResponse<>("success", "Addresses retrieved successfully", response);
+
+    }
 }
