@@ -2,15 +2,15 @@ package com.ecommerce.api.address;
 
 import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddAddressRequest;
+import com.ecommerce.api.dto.request.DeleteAddressRequest;
 import com.ecommerce.api.dto.request.ListAddressRequest;
 import com.ecommerce.api.dto.request.UpdateAddressRequest;
-import com.ecommerce.api.dto.response.AddAddressResponse;
-import com.ecommerce.api.dto.response.BaseResponse;
-import com.ecommerce.api.dto.response.ListAddressResponse;
-import com.ecommerce.api.dto.response.UpdateAddressResponse;
+import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.model.Address;
 import com.ecommerce.api.utils.JwtUtils;
 import com.ecommerce.api.utils.SecurityUtils;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.sql.Delete;
 import org.springframework.data.relational.core.sql.Update;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -159,4 +159,25 @@ public class AddressService {
         response.setDefault(saved.isDefault());
         return new BaseResponse<>("success", "Address updated successfully", response);
     }
+
+    public BaseResponse<DeleteAddressResponse>deleteAddress(DeleteAddressRequest request,Integer id) {
+        AuthenticatedUser authenticatedUser= SecurityUtils.getCurrentUser();
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+
+        }
+
+        boolean exist = addressRepository.isIdExist(id);
+        if (!exist) {
+            return new BaseResponse<>("error", "Address not found", null);
+
+        }
+        addressRepository.deleteAddress(id);
+        DeleteAddressResponse deleteAddressResponse = new DeleteAddressResponse();
+        deleteAddressResponse.setId(id);
+        return new BaseResponse<>("success", "Address deleted successfully", deleteAddressResponse);
+
+
+    }
+
 }

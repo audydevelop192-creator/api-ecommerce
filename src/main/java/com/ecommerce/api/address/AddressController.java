@@ -1,12 +1,10 @@
 package com.ecommerce.api.address;
 
 import com.ecommerce.api.auth.AuthService;
-import com.ecommerce.api.dto.request.AddAddressRequest;
-import com.ecommerce.api.dto.request.ListAddressRequest;
-import com.ecommerce.api.dto.request.RegisterRequest;
-import com.ecommerce.api.dto.request.UpdateAddressRequest;
+import com.ecommerce.api.dto.request.*;
 import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.model.Address;
+import org.springframework.data.relational.core.sql.Delete;
 import org.springframework.data.relational.core.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +44,13 @@ public class AddressController {
         BaseResponse<UpdateAddressResponse> response = addressService.updateAddress(request,id);
         return ResponseEntity.ok(response);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponse<DeleteAddressResponse>>deleteAddresses(@RequestBody DeleteAddressRequest request,
+                                                                               @PathVariable Integer id) {
+        BaseResponse<DeleteAddressResponse> response = addressService.deleteAddress(request,id);
+        return ResponseEntity.ok(response);
+    }
+
+
 }
 
