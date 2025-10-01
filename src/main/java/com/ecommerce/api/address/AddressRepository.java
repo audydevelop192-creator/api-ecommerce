@@ -105,5 +105,18 @@ public class AddressRepository {
         }catch (EmptyResultDataAccessException e){
             return Optional.empty();
         }
+
+    }
+
+    public void deleteAddress(Integer id) {
+        String sql = "delete from user_addresses where id=?;";
+        jdbcTemplate.update(sql,id);
+    }
+    public boolean isIdExist (Integer id) {
+        String sql = "select count(*) from user_addresses where id=?;";
+        Integer count = jdbcTemplate.queryForObject(sql,Integer.class,id);
+        return count > 0;
+
+
     }
 }
