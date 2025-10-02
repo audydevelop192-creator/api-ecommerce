@@ -2,12 +2,16 @@ package com.ecommerce.api.voucher;
 
 import com.ecommerce.api.model.Voucher;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class VoucherRepository {
@@ -47,5 +51,22 @@ public class VoucherRepository {
         String sql = "SELECT COUNT(*) FROM vouchers WHERE code = ?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, code);
         return count != null && count > 0;
+    }
+
+    public List<Voucher> findAll(){
+        String sql = "select id,code,discount_type,discount_value from vouchers;";
+        return jdbcTemplate.query(sql,new Object[]{},new RowMapper<Voucher>() {
+            @Override
+            public Voucher mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+                Voucher voucher = new Voucher();
+                voucher.setId(rs.getInt("id"));
+                voucher.setCode(rs.getString("code"));
+                voucher.setDiscountType(rs.getString("discount_type"));
+                voucher.setDiscountValue(rs.getBigDecimal("discount_value"));
+                return voucher;
+
+            }
+        });
     }
 }

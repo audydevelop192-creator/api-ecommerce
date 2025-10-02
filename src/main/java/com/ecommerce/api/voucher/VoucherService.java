@@ -2,14 +2,18 @@ package com.ecommerce.api.voucher;
 
 import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddVoucherRequest;
+import com.ecommerce.api.dto.request.ListVoucherRequest;
 import com.ecommerce.api.dto.response.AddVoucherResponse;
 import com.ecommerce.api.dto.response.BaseResponse;
+import com.ecommerce.api.dto.response.ListVoucherResponse;
 import com.ecommerce.api.model.Voucher;
 import com.ecommerce.api.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.ListView;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class VoucherService {
@@ -68,5 +72,31 @@ public class VoucherService {
         return new BaseResponse<>("success","Voucher added successfully",addVoucherResponse);
 
     }
+
+    public BaseResponse<ListVoucherResponse>listVoucher(ListVoucherRequest request) {
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+        List<Voucher>vouchers=voucherRepository.findAll();
+
+        ListVoucherResponse listVoucherResponse = new ListVoucherResponse();
+        for (Voucher voucher : vouchers) {
+            ListVoucherResponse.ListVoucher listVoucher = new ListVoucherResponse.ListVoucher();
+            listVoucher.setId(voucher.getId());
+            listVoucher.setCode(voucher.getCode());
+            listVoucher.setDiscountType(voucher.getDiscountType());
+            listVoucher.setDiscountValue(voucher.getDiscountValue());
+
+            listVoucherResponse.getVouchers().add(listVoucher);
+        }
+        return new BaseResponse<>("success","Vouchers retrieved successfully",listVoucherResponse);
+
+
+
+    }
+
+
+
 
 }
