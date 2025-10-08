@@ -1,10 +1,8 @@
 package com.ecommerce.api.voucher;
 
-import com.ecommerce.api.dto.request.AddAddressRequest;
-import com.ecommerce.api.dto.request.AddVoucherRequest;
-import com.ecommerce.api.dto.request.ListVoucherRequest;
-import com.ecommerce.api.dto.request.UpdateVoucherRequest;
+import com.ecommerce.api.dto.request.*;
 import com.ecommerce.api.dto.response.*;
+import org.springframework.data.relational.core.sql.Delete;
 import org.springframework.data.relational.core.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +34,12 @@ public class VoucherController {
                                                                            @PathVariable Integer id) {
         BaseResponse<UpdateVoucherResponse> response = voucherService.updateVoucher(id, request);
         return ResponseEntity.ok(response);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponse<DeleteVoucherResponse>> deleteVoucher(@RequestBody DeleteVoucherRequest request,
+                                                                              @PathVariable Integer id) {
+        BaseResponse<DeleteVoucherResponse> response = voucherService.deleteVoucher(id, request);
+        return ResponseEntity.ok(response);
+
     }
 }

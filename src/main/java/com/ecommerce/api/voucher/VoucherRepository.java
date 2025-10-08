@@ -105,4 +105,15 @@ public class VoucherRepository {
                 return Optional.empty();
             }
     }
+
+    public boolean isIdExist (Integer id){
+        String sql ="select count(*) from vouchers where id=?";
+        Integer count = jdbcTemplate.queryForObject(sql,Integer.class,id);
+        return count > 0;
+    }
+    public void deleteVoucher (Integer id){
+        String sql ="delete from vouchers where id=?";
+        jdbcTemplate.update(sql,id);
+    }
+
 }
