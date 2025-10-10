@@ -22,7 +22,11 @@ public class ProductRepository {
     //insert product
     public int addProduct(Products products) {
         String sql = "INSERT INTO products ( name, description, price, stock) VALUES (?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, products.getName(), products.getDescription(), products.getPrice(), products.getStock());
+        return jdbcTemplate.update(sql,
+                products.getName(),
+                products.getDescription(),
+                products.getPrice(),
+                products.getStock());
     }
 
     //List Product

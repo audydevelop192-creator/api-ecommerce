@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class AuthRepository {
@@ -25,12 +26,20 @@ public class AuthRepository {
     // Get User by Username
     public User findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{username}, new UserRowMapper());
+        List<User> users = jdbcTemplate.query(sql, new Object[]{username}, new UserRowMapper());
+        if (users.isEmpty()) {
+            return null;
+        }
+        return users.getFirst();
     }
 
     public User findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
+        List<User> users = jdbcTemplate.query(sql, new Object[]{email}, new UserRowMapper());
+        if (users.isEmpty()) {
+            return null;
+        }
+        return users.getFirst();
     }
 
     // RowMapper untuk User
