@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.VPS_PASS }}
           port: 22
           source: "target/api-0.0.1-SNAPSHOT.jar"
-          target: "/opt/ecommerce-api/api-0.0.1-SNAPSHOT.jar"
+          target: "/opt/ecommerce-api"
       - name: Deploy and Run Container on VPS
         uses: appleboy/ssh-action@master
         with:
@@ -54,4 +54,4 @@ jobs:
               -e SPRING_DATASOURCE_PASSWORD="pass123" \
               -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
               openjdk:21-jdk-slim \
-              java -jar /opt/ecommerce-api/api-0.0.1-SNAPSHOT.jar
+              java -jar /opt/ecommerce-api/target/api-0.0.1-SNAPSHOT.jar
