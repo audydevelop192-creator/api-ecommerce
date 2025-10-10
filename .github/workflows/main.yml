@@ -45,11 +45,12 @@ jobs:
 
             docker run -d \
               --name ecommerce-api \
+              --network ecommerce-network \
               --restart always \
               -p 8080:8080 \
               -v /opt/ecommerce-api:/opt/ecommerce-api \
               -v /opt/ecommerce-api/logs:/logs \
-              -e SPRING_DATASOURCE_URL="jdbc:mysql://localhost:3306/ecommerce" \
+              -e SPRING_DATASOURCE_URL="jdbc:mysql://mysql-container:3306/ecommerce" \
               -e SPRING_DATASOURCE_USERNAME="ecommerce" \
               -e SPRING_DATASOURCE_PASSWORD="pass123" \
               openjdk:21-jdk-slim \
