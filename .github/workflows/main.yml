@@ -30,8 +30,7 @@ jobs:
           password: ${{ secrets.VPS_PASS }}
           port: 22
           source: "target/api-0.0.1-SNAPSHOT.jar"
-          target: "/opt/ecommerce-api"
-
+          target: "/opt/ecommerce-api/api-0.0.1-SNAPSHOT.jar"
       - name: Deploy and Run Container on VPS
         uses: appleboy/ssh-action@master
         with:
