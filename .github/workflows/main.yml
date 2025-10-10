@@ -1,0 +1,57 @@
+name: Deploy Spring Boot to VPS
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: VPS_HOST
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build JAR with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Copy JAR to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASS }}
+          port: 22
+          source: "target/api-0.0.1-SNAPSHOT.jar"
+          target: "/opt/ecommerce-api"
+      - name: Deploy and Run Container on VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASS }}
+          port: 22
+          script: |
+            cd /opt/ecommerce-api
+            docker stop ecommerce-api || true
+            docker rm ecommerce-api || true
+
+            docker run -d \
+              --name ecommerce-api \
+              --network ecommerce-network \
+              --restart always \
+              -p 8080:8080 \
+              -v /opt/ecommerce-api:/opt/ecommerce-api \
+              -v /opt/ecommerce-api/logs:/logs \
+              -e SPRING_DATASOURCE_URL="jdbc:mysql://mysql-container:3306/ecommerce" \
+              -e SPRING_DATASOURCE_USERNAME="ecommerce" \
+              -e SPRING_DATASOURCE_PASSWORD="pass123" \
+              openjdk:21-jdk-slim \
+              java -jar /opt/ecommerce-api/target/api-0.0.1-SNAPSHOT.jar
