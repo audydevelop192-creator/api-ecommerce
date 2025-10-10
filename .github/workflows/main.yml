@@ -29,9 +29,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASS }}
           port: 22
-          source: "target/*.jar"
+          source: "target/api-0.0.1-SNAPSHOT.jar"
           target: "/opt/ecommerce-api"
-
       - name: Deploy and Run Container on VPS
         uses: appleboy/ssh-action@master
         with:
@@ -46,12 +45,13 @@ jobs:
 
             docker run -d \
               --name ecommerce-api \
+              --network ecommerce-network \
               --restart always \
               -p 8080:8080 \
-              -e SPRING_DATASOURCE_URL="jdbc:mysql://localhost:3306/ecommerce" \
+              -v /opt/ecommerce-api:/opt/ecommerce-api \
+              -v /opt/ecommerce-api/logs:/logs \
+              -e SPRING_DATASOURCE_URL="jdbc:mysql://mysql-container:3306/ecommerce" \
               -e SPRING_DATASOURCE_USERNAME="ecommerce" \
               -e SPRING_DATASOURCE_PASSWORD="pass123" \
-              -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
-              -v /opt/ecommerce-api/logs:/logs \
               openjdk:21-jdk-slim \
-              java -jar /opt/ecommerce-api/*.jar
+              java -jar /opt/ecommerce-api/target/api-0.0.1-SNAPSHOT.jar
