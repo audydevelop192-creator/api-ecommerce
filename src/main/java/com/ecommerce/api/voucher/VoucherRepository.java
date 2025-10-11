@@ -116,4 +116,21 @@ public class VoucherRepository {
         jdbcTemplate.update(sql,id);
     }
 
+    public List<Voucher> findByCode(String code){
+        String sql = "select id, code, discount_type, discount_value, max_usage, expired_at from vouchers where code = ?;";
+        return jdbcTemplate.query(sql, new Object[]{code}, new RowMapper<Voucher>() {
+            @Override
+            public Voucher mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Voucher voucher = new Voucher();
+                voucher.setId(rs.getInt("id"));
+                voucher.setCode(rs.getString("code"));
+                voucher.setDiscountType(rs.getString("discount_type"));
+                voucher.setDiscountValue(rs.getBigDecimal("discount_value"));
+                voucher.setMaxUsage(rs.getInt("max_usage"));
+                voucher.setExpiredAt(rs.getTimestamp("expired_at").toLocalDateTime());
+                return voucher;
+            }
+        });
+    }
+
 }
