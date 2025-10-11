@@ -34,31 +34,32 @@ public class VoucherService {
         }
 
         if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")) {
-            return new BaseResponse<>("erorr", "Invalid user access", null);
+            return new BaseResponse<>("error", "Invalid user access", null);
         }
 
         if (addVoucherRequest.getCode() == null || addVoucherRequest.getCode().isBlank()) {
-            return new BaseResponse<>("erorr", "Invalid code", null);
+            return new BaseResponse<>("error", "Invalid code", null);
         }
 
         if (voucherRepository.existsByCode(addVoucherRequest.getCode())) {
-            return new BaseResponse<>("erorr", "Voucher already exists", null);
+            return new BaseResponse<>("error", "Voucher already exists", null);
         }
 
         if (addVoucherRequest.getDiscountValue() == null || addVoucherRequest.getDiscountValue().compareTo(BigDecimal.ZERO) <= 0) {
 
-            return new BaseResponse<>("erorr", "discount cannot be smaller than 0 or cannot be null", null);
+            return new BaseResponse<>("error", "discount cannot be smaller than 0 or cannot be null", null);
         }
 
         if (addVoucherRequest.getDiscountType() == null) {
-            return new BaseResponse<>("erorr", "discountType is required", null);
+            return new BaseResponse<>("error", "discountType is required", null);
         }
 
         if (!(addVoucherRequest.getMaxUsage() >= 100)) {
-            return new BaseResponse<>("erorr", "maxUsage should be less than 100", null);
+            return new BaseResponse<>("error", "maxUsage should be less than 100", null);
         }
         if (addVoucherRequest.getExpiredAt() == null || addVoucherRequest.getExpiredAt().isBefore(LocalDateTime.now())) {
-            return new BaseResponse<>("erorr", "Expiration date cannot be in the past", null);
+            return new BaseResponse<>("error", "Expiration date cannot be in the past", null);
+
 
         }
         Voucher voucher = new Voucher();

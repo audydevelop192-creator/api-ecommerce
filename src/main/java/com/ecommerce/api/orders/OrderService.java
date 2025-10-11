@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -70,7 +71,15 @@ public class OrderService {
         }
 
         Voucher voucher = null;
-        // if
+        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()){
+            List<Voucher> vouchers = voucherRepository.findByCode(request.getVoucherCode());
+            if (vouchers.isEmpty()){
+                return new BaseResponse<>("error", "voucher not found", null);
+            }
+            if (voucher.getExpiredAt().isBefore(java.time.LocalDateTime.now())){
+                return new BaseResponse<>("error", "voucher has expired", null);
+            }
+        }
 
         BigDecimal totalPrice = BigDecimal.ZERO;
         for (AddOrderRequest.OrderItemsRequest items :request.getItems()){
