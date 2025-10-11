@@ -1,12 +1,9 @@
 package com.ecommerce.api.voucher;
 
-import com.ecommerce.api.dto.request.AddAddressRequest;
-import com.ecommerce.api.dto.request.AddVoucherRequest;
-import com.ecommerce.api.dto.request.ListVoucherRequest;
-import com.ecommerce.api.dto.response.AddAddressResponse;
-import com.ecommerce.api.dto.response.AddVoucherResponse;
-import com.ecommerce.api.dto.response.BaseResponse;
-import com.ecommerce.api.dto.response.ListVoucherResponse;
+import com.ecommerce.api.dto.request.*;
+import com.ecommerce.api.dto.response.*;
+import org.springframework.data.relational.core.sql.Delete;
+import org.springframework.data.relational.core.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +20,26 @@ public class VoucherController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse<AddVoucherResponse>> addProduct(@RequestBody AddVoucherRequest request) {
+    public ResponseEntity<BaseResponse<AddVoucherResponse>> addVoucher(@RequestBody AddVoucherRequest request) {
         BaseResponse<AddVoucherResponse> response = voucherService.addVoucher(request);
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    public ResponseEntity<BaseResponse<ListVoucherResponse>> listProduct(@RequestBody ListVoucherRequest request) {
+    public ResponseEntity<BaseResponse<ListVoucherResponse>> listVoucher(@RequestBody ListVoucherRequest request) {
         BaseResponse<ListVoucherResponse> response = voucherService.listVoucher(request);
         return ResponseEntity.ok(response);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponse<UpdateVoucherResponse>> updateVoucher(@RequestBody UpdateVoucherRequest request,
+                                                                           @PathVariable Integer id) {
+        BaseResponse<UpdateVoucherResponse> response = voucherService.updateVoucher(id, request);
+        return ResponseEntity.ok(response);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponse<DeleteVoucherResponse>> deleteVoucher(@RequestBody DeleteVoucherRequest request,
+                                                                              @PathVariable Integer id) {
+        BaseResponse<DeleteVoucherResponse> response = voucherService.deleteVoucher(id, request);
+        return ResponseEntity.ok(response);
+
     }
 }

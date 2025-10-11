@@ -1,6 +1,7 @@
 package com.ecommerce.api.voucher;
 
 import com.ecommerce.api.model.Voucher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class VoucherRepository {
@@ -69,4 +71,49 @@ public class VoucherRepository {
             }
         });
     }
+
+    public int updateVoucher(Voucher voucher) {
+        String sql = "UPDATE vouchers SET code=?, discount_type=?, discount_value=?, max_usage=?, expired_at=? WHERE id=?";
+        return jdbcTemplate.update(sql,
+                voucher.getCode(),
+                voucher.getDiscountType(),
+                voucher.getDiscountValue(),
+                voucher.getMaxUsage(),
+                java.sql.Timestamp.valueOf(voucher.getExpiredAt()), // konversi LDT ke Timestamp
+                voucher.getId());
+    }
+
+    public Optional<Voucher> findById(Integer id) {
+        String sql ="select  id,code,vouchers.discount_type,vouchers.discount_value,vouchers.max_usage,vouchers.expired_at from vouchers where id=?";
+            try {
+                Voucher voucher = jdbcTemplate.queryForObject(sql,new Object[]{id},new RowMapper<Voucher>() {
+
+                    @Override
+                    public Voucher mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Voucher voucher = new Voucher();
+                        voucher.setId(rs.getInt("id"));
+                        voucher.setCode(rs.getString("code"));
+                        voucher.setDiscountType(rs.getString("discount_type"));
+                        voucher.setDiscountValue(rs.getBigDecimal("discount_value"));
+                        voucher.setMaxUsage(rs.getInt("max_usage"));
+                        voucher.setExpiredAt(rs.getTimestamp("expired_at").toLocalDateTime());
+                        return voucher;
+                    }
+                });
+                return Optional.ofNullable(voucher);
+            }catch (EmptyResultDataAccessException e){
+                return Optional.empty();
+            }
+    }
+
+    public boolean isIdExist (Integer id){
+        String sql ="select count(*) from vouchers where id=?";
+        Integer count = jdbcTemplate.queryForObject(sql,Integer.class,id);
+        return count > 0;
+    }
+    public void deleteVoucher (Integer id){
+        String sql ="delete from vouchers where id=?";
+        jdbcTemplate.update(sql,id);
+    }
+
 }
