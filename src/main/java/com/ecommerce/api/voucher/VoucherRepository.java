@@ -127,7 +127,9 @@ public class VoucherRepository {
                 voucher.setDiscountType(rs.getString("discount_type"));
                 voucher.setDiscountValue(rs.getBigDecimal("discount_value"));
                 voucher.setMaxUsage(rs.getInt("max_usage"));
-                voucher.setExpiredAt(rs.getTimestamp("expired_at").toLocalDateTime());
+                voucher.setExpiredAt(
+                        rs.getTimestamp("expired_at") != null ? rs.getTimestamp("expired_at").toLocalDateTime()
+                                : null);
                 return voucher;
             }
         });

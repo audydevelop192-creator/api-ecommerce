@@ -8,6 +8,7 @@ import com.ecommerce.api.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,36 +95,39 @@ public class ProductService {
             return new BaseResponse<>("error", "Invalid user access", null);
         }
 
-        Products product = productRepository.findById(id);
-        if (product == null) {
+        Optional<Products> productOpt = productRepository.findById(id);
+        if (productOpt.isEmpty()) {
             return new BaseResponse<>("error", "Product not found", null);
         }
 
-        if (request.getName() == null) {
+        Products product = productOpt.get();
+
+        if (request.getName() == null || request.getName().trim().isEmpty()) {
             return new BaseResponse<>("error", "Name is required", null);
         }
 
         if (request.getPrice().compareTo(BigDecimal.ZERO) < 0) {
-            return new BaseResponse<>("error", "the price cannot be less than zero", null);
+            return new BaseResponse<>("error", "The price cannot be less than zero", null);
         }
 
-        if (request.getStock() <= 0) {
-            return new BaseResponse<>("error", "stock cannot be smaller than zero", null);
+        if (request.getStock() < 0) {
+            return new BaseResponse<>("error", "Stock cannot be less than zero", null);
         }
-
 
         product.setName(request.getName());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
         productRepository.updateProduct(product);
 
-        UpdateProductResponse updateProductResponse = new UpdateProductResponse();
-        updateProductResponse.setId(product.getId());
-        updateProductResponse.setName(product.getName());
-        updateProductResponse.setPrice(product.getPrice());
-        updateProductResponse.setStock(product.getStock());
-        return new BaseResponse<>("success", "Product updated successfully", updateProductResponse);
+        UpdateProductResponse response = new UpdateProductResponse();
+        response.setId(product.getId());
+        response.setName(product.getName());
+        response.setPrice(product.getPrice());
+        response.setStock(product.getStock());
+
+        return new BaseResponse<>("success", "Product updated successfully", response);
     }
+
 
     //DELETE PRODUCT
     public BaseResponse<DeleteProductResponse> deleteProduct(Integer id, DeleteProductRequest request) {
@@ -141,6 +145,9 @@ public class ProductService {
         if (!exist){
             return new BaseResponse<>("error", "Product not found", null);
         }
+
+
+
 
         productRepository.deleteProduct(id);
 

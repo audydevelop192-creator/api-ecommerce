@@ -58,25 +58,26 @@ public class ProductRepository {
 
     }
 
-    public Products findById(Integer id) {
-        String sql = "SELECT id,name,price,stock from products where id=?";
-        List<Products> products = jdbcTemplate.query(sql, new Object[]{id}, new RowMapper<Products>() {
-            @Override
-            public Products mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Products product = new Products();
-                product.setId(rs.getInt("id"));
-                product.setName(rs.getString("name"));
-                product.setPrice(rs.getBigDecimal("price"));
-                product.setStock(rs.getInt("stock"));
-                return product;
-            }
-        });
-        if (products.isEmpty()) {
-            return null;
-        } else {
-            return products.getFirst();
+    public Optional<Products> findById(Integer id) {
+        String sql = "SELECT id,name,price,stock FROM products WHERE id=?";
+        try {
+            Products product = jdbcTemplate.queryForObject(sql, new Object[]{id}, new RowMapper<Products>() {
+                @Override
+                public Products mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    Products p = new Products();
+                    p.setId(rs.getInt("id"));
+                    p.setName(rs.getString("name"));
+                    p.setPrice(rs.getBigDecimal("price"));
+                    p.setStock(rs.getInt("stock"));
+                    return p;
+                }
+            });
+            return Optional.ofNullable(product);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
+
 
     public void deleteProduct(Integer id) {
         String sql = "DELETE from products where id=?";
