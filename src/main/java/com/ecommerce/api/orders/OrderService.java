@@ -4,9 +4,11 @@ import com.ecommerce.api.address.AddressRepository;
 import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddOrderRequest;
 import com.ecommerce.api.dto.request.LIstUserOrderRequest;
+import com.ecommerce.api.dto.request.ViewOrderDetailRequest;
 import com.ecommerce.api.dto.response.AddOrderResponse;
 import com.ecommerce.api.dto.response.BaseResponse;
 import com.ecommerce.api.dto.response.ListUserOrderResponse;
+import com.ecommerce.api.dto.response.ViewOrderDetailResponse;
 import com.ecommerce.api.model.Address;
 import com.ecommerce.api.model.Order;
 import com.ecommerce.api.model.Products;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,9 +94,9 @@ public class OrderService {
 
 
         BigDecimal totalPrice = BigDecimal.ZERO;
-        for (AddOrderRequest.OrderItemsRequest items :request.getItems()){
-           Optional<Products> productOpt = productRepository.findById(items.getProductId());
-            if (productOpt.isEmpty()){
+        for (AddOrderRequest.OrderItemsRequest items : request.getItems()) {
+            Optional<Products> productOpt = productRepository.findById(items.getProductId());
+            if (productOpt.isEmpty()) {
                 return new BaseResponse<>("error", "Product with id " + items.getProductId() + " not found", null);
             }
 
@@ -107,7 +110,7 @@ public class OrderService {
                 BigDecimal discountAmount = totalPrice.multiply(discountPercent);
                 totalPrice = totalPrice.subtract(discountAmount);
             } else if (voucher.getDiscountType().equalsIgnoreCase("AMOUNT")) {
-                totalPrice =totalPrice.subtract(voucher.getDiscountValue());
+                totalPrice = totalPrice.subtract(voucher.getDiscountValue());
             }
         }
 
@@ -119,6 +122,19 @@ public class OrderService {
                 "PENDING_PAYMENT"
         );
 
+        for (AddOrderRequest.OrderItemsRequest item : request.getItems()) {
+            Products product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            orderRepository.insertOrderItem(
+                    orderId,
+                    product.getId(),
+                    item.getQuantity(),
+                    product.getPrice(),
+                    product.getPrice().multiply(new BigDecimal(item.getQuantity()))
+            );
+        }
+
         AddOrderResponse addOrderResponse = new AddOrderResponse();
         addOrderResponse.setOrderId(orderId);
         addOrderResponse.setTotalPrice(totalPrice);
@@ -128,9 +144,9 @@ public class OrderService {
 
     }
 
-    public BaseResponse<ListUserOrderResponse> listOrder(LIstUserOrderRequest request){
+    public BaseResponse<ListUserOrderResponse> listOrder(LIstUserOrderRequest request) {
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
-        if (authenticatedUser == null){
+        if (authenticatedUser == null) {
             return new BaseResponse<>("error", "Invalid or expired token", null);
         }
 
@@ -148,5 +164,50 @@ public class OrderService {
         }
 
         return new BaseResponse<>("success", "Orders retrieved successfully", listUserOrderResponse);
+    }
+
+    public BaseResponse<ViewOrderDetailResponse> viewOrderDetail(Integer id, ViewOrderDetailRequest request) {
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")) {
+            return new BaseResponse<>("error", "invalid user access", null);
+        }
+
+        Optional<Order> orderOpt = orderRepository.findOrderDetailById(id);
+        if (orderOpt.isEmpty()) {
+            return new BaseResponse<>("error", "order not found", null);
+        }
+
+        Order orders = orderOpt.get();
+
+        Optional<Address> addressOpt = addressRepository.findById(orders.getAddressId());
+
+        Address addresses = addressOpt.get();
+
+        // Voucher
+        String voucherCode = "";
+        if (orders.getVoucherId() != null) {
+            voucherCode = voucherRepository.findById(orders.getVoucherId())
+                    .map(Voucher::getCode)
+                    .orElse("");
+        }
+
+
+        List<ViewOrderDetailResponse.Item> items = orderRepository.findItemsByOrderId(orders.getId());
+
+        ViewOrderDetailResponse response = new ViewOrderDetailResponse();
+        response.setOrderId(orders.getId());
+        response.setItems(items);
+        response.setShippingAddress(addresses.getAddressLine() + " " + addresses.getCity());
+        response.setTotalPrice(orders.getTotalAmount());
+        response.setStatus(orders.getStatus());
+        response.setVoucherCode(voucherCode);
+
+        return new BaseResponse<>("success", "Order detail retrieved successfully", response);
+
+
     }
 }

@@ -1,6 +1,8 @@
 package com.ecommerce.api.orders;
 
+import com.ecommerce.api.dto.response.ViewOrderDetailResponse;
 import com.ecommerce.api.model.Order;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderRepository {
@@ -59,7 +62,7 @@ public class OrderRepository {
         return keyHolder.getKey().intValue();
     }
 
-    public List<Order> findAll(){
+    public List<Order> findAll() {
         String sql = "select id, user_id, address_id,voucher_id,order_date,status,total_amount from orders";
         return jdbcTemplate.query(sql, new Object[]{}, new RowMapper<Order>() {
             @Override
@@ -76,6 +79,53 @@ public class OrderRepository {
             }
         });
     }
+
+    public Optional<Order> findOrderDetailById(Integer id) {
+        String sql = "select id, user_id, address_id,voucher_id,order_date,status,total_amount from orders where id=?";
+
+        try {
+            Order order = jdbcTemplate.queryForObject(sql, new Object[]{id}, new RowMapper<Order>() {
+                @Override
+                public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    Order order = new Order();
+                    order.setId(rs.getInt("id"));
+                    order.setUserId(rs.getInt("user_id"));
+                    order.setAddressId(rs.getInt("address_id"));
+                    order.setVoucherId(rs.getInt("voucher_id"));
+                    order.setOrderDate(rs.getTimestamp("order_date"));
+                    order.setStatus(rs.getString("status"));
+                    order.setTotalAmount(rs.getBigDecimal("total_amount"));
+                    return order;
+                }
+            });
+
+            return Optional.ofNullable(order);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
+    }
+
+    public List<ViewOrderDetailResponse.Item> findItemsByOrderId(Integer orderId) {
+        String sql = "SELECT oi.product_id,p.name,oi.quantity, oi.price FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?";
+
+        return jdbcTemplate.query(sql, new Object[]{orderId}, (rs, rowNum) -> {
+            ViewOrderDetailResponse.Item item = new ViewOrderDetailResponse.Item();
+            item.setProductId(rs.getInt("product_id"));
+            item.setName(rs.getString("name"));
+            item.setQuantity(rs.getInt("quantity"));
+            item.setPrice(rs.getBigDecimal("price"));
+            return item;
+        });
+
+    }
+
+    public void insertOrderItem(Integer orderId, Integer productId, Integer quantity, BigDecimal price,BigDecimal subTotal) {
+        String sql = "INSERT INTO order_items (order_id, product_id, quantity, price,subtotal) VALUES (?, ?, ?, ?,?)";
+        jdbcTemplate.update(sql, orderId, productId, quantity, price,subTotal);
+    }
+
+
 
 
 }
