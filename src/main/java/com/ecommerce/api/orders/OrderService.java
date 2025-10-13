@@ -3,9 +3,12 @@ package com.ecommerce.api.orders;
 import com.ecommerce.api.address.AddressRepository;
 import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddOrderRequest;
+import com.ecommerce.api.dto.request.LIstUserOrderRequest;
 import com.ecommerce.api.dto.response.AddOrderResponse;
 import com.ecommerce.api.dto.response.BaseResponse;
+import com.ecommerce.api.dto.response.ListUserOrderResponse;
 import com.ecommerce.api.model.Address;
+import com.ecommerce.api.model.Order;
 import com.ecommerce.api.model.Products;
 import com.ecommerce.api.model.Voucher;
 import com.ecommerce.api.product.ProductRepository;
@@ -123,5 +126,27 @@ public class OrderService {
 
         return new BaseResponse<>("success", "Order created successfully", addOrderResponse);
 
+    }
+
+    public BaseResponse<ListUserOrderResponse> listOrder(LIstUserOrderRequest request){
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+        if (authenticatedUser == null){
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        List<Order> orders = orderRepository.findAll();
+
+        ListUserOrderResponse listUserOrderResponse = new ListUserOrderResponse();
+
+        for (Order order : orders) {
+            ListUserOrderResponse.ListOrder listOrder = new ListUserOrderResponse.ListOrder();
+            listOrder.setOrderId(order.getId());
+            listOrder.setTotalPrice(order.getTotalAmount());
+            listOrder.setStatus(order.getStatus());
+            listOrder.setCreatedAt(order.getOrderDate());
+            listUserOrderResponse.getOrderList().add(listOrder);
+        }
+
+        return new BaseResponse<>("success", "Orders retrieved successfully", listUserOrderResponse);
     }
 }

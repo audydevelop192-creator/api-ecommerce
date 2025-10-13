@@ -2,13 +2,17 @@ package com.ecommerce.api.orders;
 
 import com.ecommerce.api.model.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class OrderRepository {
@@ -53,6 +57,24 @@ public class OrderRepository {
         }, keyHolder);
 
         return keyHolder.getKey().intValue();
+    }
+
+    public List<Order> findAll(){
+        String sql = "select id, user_id, address_id,voucher_id,order_date,status,total_amount from orders";
+        return jdbcTemplate.query(sql, new Object[]{}, new RowMapper<Order>() {
+            @Override
+            public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Order order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setUserId(rs.getInt("user_id"));
+                order.setAddressId(rs.getInt("address_id"));
+                order.setVoucherId(rs.getInt("voucher_id"));
+                order.setOrderDate(rs.getTimestamp("order_date"));
+                order.setStatus(rs.getString("status"));
+                order.setTotalAmount(rs.getBigDecimal("total_amount"));
+                return order;
+            }
+        });
     }
 
 
