@@ -172,7 +172,7 @@ public class OrderService {
             return new BaseResponse<>("error", "Invalid or expired token", null);
         }
 
-        if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")) {
+        if (!authenticatedUser.getRole().equalsIgnoreCase("user")) {
             return new BaseResponse<>("error", "invalid user access", null);
         }
 
