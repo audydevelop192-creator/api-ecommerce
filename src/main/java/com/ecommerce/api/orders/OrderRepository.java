@@ -38,16 +38,22 @@ public class OrderRepository {
         return keyHolder.getKey().intValue();
     }
 
-    public  int saveOrder(Integer userId, BigDecimal totalPrice, String status){
-        String sql = "insert into orders(id, user_id, address_id, voucher_id, order_date, status, total_amount) VALUES(?,?,?,?,?,?,?)";
+    public int saveOrder(Integer userId, Integer addressId, Integer voucherId, BigDecimal totalPrice, String status) {
+        String sql = "INSERT INTO orders (user_id, address_id, voucher_id, order_date, status, total_amount) VALUES (?, ?, ?, NOW(), ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, userId);
-            ps.setBigDecimal(2, totalPrice);
-            ps.setString(3, status);
+            ps.setObject(2, addressId);
+            ps.setObject(3, voucherId);
+            ps.setString(4, status);
+            ps.setBigDecimal(5, totalPrice);
             return ps;
         }, keyHolder);
+
         return keyHolder.getKey().intValue();
     }
+
+
 }

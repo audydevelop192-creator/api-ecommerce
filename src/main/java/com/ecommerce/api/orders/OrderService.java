@@ -49,11 +49,12 @@ public class OrderService {
         }
 
         for (AddOrderRequest.OrderItemsRequest items : request.getItems()) {
-            Products products = productRepository.findById(items.getProductId());
-            if (products == null) {
-                return new BaseResponse<>("error", "Producy with id " + items.getProductId() + "not found", null);
+            Optional<Products> productOpt = productRepository.findById(items.getProductId());
+            if (productOpt.isEmpty()) {
+                return new BaseResponse<>("error", "Product with id " + items.getProductId() + "not found", null);
             }
 
+            Products products = productOpt.get();
             if (products.getStock() < items.getQuantity()) {
                 return new BaseResponse<>("error", "Not enough stock for product " + products.getName(), null);
             }
@@ -71,22 +72,29 @@ public class OrderService {
         }
 
         Voucher voucher = null;
-        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()){
+        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()) {
             List<Voucher> vouchers = voucherRepository.findByCode(request.getVoucherCode());
-            if (vouchers.isEmpty()){
+            if (vouchers.isEmpty()) {
                 return new BaseResponse<>("error", "voucher not found", null);
             }
-            if (voucher.getExpiredAt().isBefore(java.time.LocalDateTime.now())){
+
+            voucher = vouchers.get(0);
+
+            // jika voucher sudah kedaluwarsa
+            if (voucher.getExpiredAt().isBefore(java.time.LocalDateTime.now())) {
                 return new BaseResponse<>("error", "voucher has expired", null);
             }
         }
 
+
         BigDecimal totalPrice = BigDecimal.ZERO;
         for (AddOrderRequest.OrderItemsRequest items :request.getItems()){
-            Products products = productRepository.findById(items.getProductId());
-            if (products ==null){
-                throw new RuntimeException("Product not found");
+           Optional<Products> productOpt = productRepository.findById(items.getProductId());
+            if (productOpt.isEmpty()){
+                return new BaseResponse<>("error", "Product with id " + items.getProductId() + " not found", null);
             }
+
+            Products products = productOpt.get();
             totalPrice = totalPrice.add(products.getPrice().multiply(BigDecimal.valueOf(items.getQuantity())));
         }
 
@@ -100,7 +108,13 @@ public class OrderService {
             }
         }
 
-        int orderId = orderRepository.saveOrder(authenticatedUser.getUserId(), totalPrice, "PENDING_PAYMENT");
+        int orderId = orderRepository.saveOrder(
+                authenticatedUser.getUserId(),
+                address.getId(),
+                voucher != null ? voucher.getId() : null,
+                totalPrice,
+                "PENDING_PAYMENT"
+        );
 
         AddOrderResponse addOrderResponse = new AddOrderResponse();
         addOrderResponse.setOrderId(orderId);
