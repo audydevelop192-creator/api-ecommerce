@@ -125,6 +125,13 @@ public class OrderRepository {
         jdbcTemplate.update(sql, orderId, productId, quantity, price,subTotal);
     }
 
+    public int cancelPendingOrders() {
+        String sql = "UPDATE orders " +
+                "SET status = 'CANCELED' " +
+                "WHERE status = 'PENDING_PAYMENT' " +
+                "AND order_date <= DATE_SUB(NOW(), INTERVAL 5 MINUTE)";
+        return jdbcTemplate.update(sql);
+    }
 
 
 
