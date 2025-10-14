@@ -3,10 +3,12 @@ package com.ecommerce.api.orders;
 import com.ecommerce.api.dto.request.AddOrderRequest;
 import com.ecommerce.api.dto.request.LIstUserOrderRequest;
 import com.ecommerce.api.dto.request.PaymentOrderRequest;
+import com.ecommerce.api.dto.request.UpdateOrderStatusRequest;
 import com.ecommerce.api.dto.request.ViewOrderDetailRequest;
 import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.payment.PaymentService;
 import com.ecommerce.api.utils.SecurityUtils;
+import com.ecommerce.api.dto.response.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +40,13 @@ public class OrderController {
     public ResponseEntity<BaseResponse<ViewOrderDetailResponse>> viewOrderDetail(@RequestBody ViewOrderDetailRequest request,
                                                                                  @PathVariable Integer id) {
         BaseResponse<ViewOrderDetailResponse> response = orderService.viewOrderDetail(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<BaseResponse<UpdateOrderStatusResponse>> updateOrderStatus(@RequestBody UpdateOrderStatusRequest request,
+                                                                                   @PathVariable Integer id){
+        BaseResponse<UpdateOrderStatusResponse> response = orderService.updateStatusOrder(id, request);
         return ResponseEntity.ok(response);
     }
 
