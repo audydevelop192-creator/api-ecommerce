@@ -134,5 +134,10 @@ public class OrderRepository {
     }
 
 
+    public void updateStatus(Integer orderId, String status) {
+        String sql = "UPDATE orders SET status = ? WHERE id = ?";
+        jdbcTemplate.update(sql, status, orderId);
+    }
+
 
 }
