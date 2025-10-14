@@ -2,10 +2,7 @@ package com.ecommerce.api.orders;
 
 import com.ecommerce.api.address.AddressRepository;
 import com.ecommerce.api.config.AuthenticatedUser;
-import com.ecommerce.api.dto.request.AddOrderRequest;
-import com.ecommerce.api.dto.request.LIstUserOrderRequest;
-import com.ecommerce.api.dto.request.UpdateOrderStatusRequest;
-import com.ecommerce.api.dto.request.ViewOrderDetailRequest;
+import com.ecommerce.api.dto.request.*;
 import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.model.Address;
 import com.ecommerce.api.model.Order;
@@ -18,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -237,5 +233,34 @@ public class OrderService {
         updateOrderStatusResponse.setStatus(order.getStatus());
         return new BaseResponse<>("success", "Order status updated successfully", updateOrderStatusResponse);
 
+    }
+
+    public BaseResponse<CancelOrderResponse> cancelOrder(Integer id, CancelOrderRequest request, Integer userId){
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+        if(authenticatedUser == null){
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        Optional<Order> orderOpt = orderRepository.findById(id);
+        if (orderOpt.isEmpty()){
+            return new BaseResponse<>("error", "Order not found", null);
+        }
+
+        Order order = orderOpt.get();
+
+        if(!order.getUserId().equals(userId)){
+            return new BaseResponse<>("error", "Order does not belong to user", null);
+        }
+
+        if (!"PENDING_PAYMENT".equals(order.getStatus())){
+            return new BaseResponse<>("error", "Order status must be PENDING_PAYMENT", null);
+        }
+
+        orderRepository.updateOrderStatusById(id, "CANCELED");
+
+        CancelOrderResponse cancelOrderResponse = new CancelOrderResponse();
+        cancelOrderResponse.setOrderId(order.getId());
+        cancelOrderResponse.setStatus("CANCELED");
+        return new BaseResponse<>("success", "Order canceled successfully", cancelOrderResponse );
     }
 }

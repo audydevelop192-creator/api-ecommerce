@@ -129,7 +129,7 @@ public class OrderRepository {
         String sql = "UPDATE orders " +
                 "SET status = 'CANCELED' " +
                 "WHERE status = 'PENDING_PAYMENT' " +
-                "AND order_date <= DATE_SUB(NOW(), INTERVAL 5 MINUTE)";
+                "AND order_date <= DATE_SUB(NOW(), INTERVAL 10 MINUTE)";
         return jdbcTemplate.update(sql);
     }
 

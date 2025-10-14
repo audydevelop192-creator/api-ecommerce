@@ -1,10 +1,6 @@
 package com.ecommerce.api.orders;
 
-import com.ecommerce.api.dto.request.AddOrderRequest;
-import com.ecommerce.api.dto.request.LIstUserOrderRequest;
-import com.ecommerce.api.dto.request.PaymentOrderRequest;
-import com.ecommerce.api.dto.request.UpdateOrderStatusRequest;
-import com.ecommerce.api.dto.request.ViewOrderDetailRequest;
+import com.ecommerce.api.dto.request.*;
 import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.payment.PaymentService;
 import com.ecommerce.api.utils.SecurityUtils;
@@ -45,7 +41,7 @@ public class OrderController {
 
     @PutMapping("/{id}/status")
     public ResponseEntity<BaseResponse<UpdateOrderStatusResponse>> updateOrderStatus(@RequestBody UpdateOrderStatusRequest request,
-                                                                                   @PathVariable Integer id){
+                                                                                     @PathVariable Integer id) {
         BaseResponse<UpdateOrderStatusResponse> response = orderService.updateStatusOrder(id, request);
         return ResponseEntity.ok(response);
     }
@@ -55,6 +51,14 @@ public class OrderController {
                                                                            @PathVariable("id") Integer orderId) {
         Integer userId = SecurityUtils.getCurrentUserId();
         BaseResponse<PaymentOrderResponse> response = paymentService.paymentOrder(orderId, userId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<BaseResponse<CancelOrderResponse>> cancelOrder(@RequestBody CancelOrderRequest request,
+                                                                         @PathVariable("id") Integer orderId) {
+        Integer userId = SecurityUtils.getCurrentUserId();
+        BaseResponse<CancelOrderResponse> response = orderService.cancelOrder(orderId, request, userId);
         return ResponseEntity.ok(response);
     }
 }
