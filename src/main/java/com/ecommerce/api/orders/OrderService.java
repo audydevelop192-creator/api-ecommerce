@@ -4,11 +4,9 @@ import com.ecommerce.api.address.AddressRepository;
 import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.AddOrderRequest;
 import com.ecommerce.api.dto.request.LIstUserOrderRequest;
+import com.ecommerce.api.dto.request.UpdateOrderStatusRequest;
 import com.ecommerce.api.dto.request.ViewOrderDetailRequest;
-import com.ecommerce.api.dto.response.AddOrderResponse;
-import com.ecommerce.api.dto.response.BaseResponse;
-import com.ecommerce.api.dto.response.ListUserOrderResponse;
-import com.ecommerce.api.dto.response.ViewOrderDetailResponse;
+import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.model.Address;
 import com.ecommerce.api.model.Order;
 import com.ecommerce.api.model.Products;
@@ -207,8 +205,37 @@ public class OrderService {
         response.setVoucherCode(voucherCode);
 
         return new BaseResponse<>("success", "Order detail retrieved successfully", response);
-
     }
 
 
+    public BaseResponse<UpdateOrderStatusResponse> updateStatusOrder(Integer id, UpdateOrderStatusRequest request) {
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+        if (authenticatedUser == null) {
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")) {
+            return new BaseResponse<>("error", "Invalid user Access", null);
+        }
+
+
+        Optional<Order> orderDetail = orderRepository.findById(id);
+        if (orderDetail.isEmpty()) {
+            return new BaseResponse<>("error", "Order not found", null);
+        }
+
+        int updated = orderRepository.updateOrderStatusById(id, request.getStatus());
+        if (updated == 0) {
+            return new BaseResponse<>("error", "Failed to update order status", null);
+        }
+
+        Order order = orderDetail.get();
+        order.setStatus(request.getStatus());
+
+        UpdateOrderStatusResponse updateOrderStatusResponse = new UpdateOrderStatusResponse();
+        updateOrderStatusResponse.setOrderId(order.getId());
+        updateOrderStatusResponse.setStatus(order.getStatus());
+        return new BaseResponse<>("success", "Order status updated successfully", updateOrderStatusResponse);
+
+    }
 }

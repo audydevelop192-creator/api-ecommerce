@@ -120,9 +120,9 @@ public class OrderRepository {
 
     }
 
-    public void insertOrderItem(Integer orderId, Integer productId, Integer quantity, BigDecimal price,BigDecimal subTotal) {
+    public void insertOrderItem(Integer orderId, Integer productId, Integer quantity, BigDecimal price, BigDecimal subTotal) {
         String sql = "INSERT INTO order_items (order_id, product_id, quantity, price,subtotal) VALUES (?, ?, ?, ?,?)";
-        jdbcTemplate.update(sql, orderId, productId, quantity, price,subTotal);
+        jdbcTemplate.update(sql, orderId, productId, quantity, price, subTotal);
     }
 
     public int cancelPendingOrders() {
@@ -137,6 +137,36 @@ public class OrderRepository {
     public void updateStatus(Integer orderId, String status) {
         String sql = "UPDATE orders SET status = ? WHERE id = ?";
         jdbcTemplate.update(sql, status, orderId);
+    }
+
+    public Optional<Order> findById(Integer id) {
+        String sql = "select id, user_id, address_id,voucher_id,order_date,status,total_amount from orders where id=?";
+
+        try {
+            Order order = jdbcTemplate.queryForObject(sql, new Object[]{id}, new RowMapper<Order>() {
+                @Override
+                public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    Order order = new Order();
+                    order.setId(rs.getInt("id"));
+                    order.setUserId(rs.getInt("user_id"));
+                    order.setAddressId(rs.getInt("address_id"));
+                    order.setVoucherId(rs.getInt("voucher_id"));
+                    order.setOrderDate(rs.getTimestamp("order_date"));
+                    order.setStatus(rs.getString("status"));
+                    order.setTotalAmount(rs.getBigDecimal("total_amount"));
+                    return order;
+                }
+            });
+
+            return Optional.ofNullable(order);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public int updateOrderStatusById(Integer orderId, String status) {
+        String sql = "UPDATE orders SET status = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, status, orderId);
     }
 
 
