@@ -2,12 +2,17 @@ package com.ecommerce.api.report;
 
 import com.ecommerce.api.dto.request.RevenueByPeriodReportRequest;
 import com.ecommerce.api.dto.request.StockReportRequest;
+import com.ecommerce.api.dto.request.VoucherUsageReportRequest;
 import com.ecommerce.api.dto.response.BaseResponse;
 import com.ecommerce.api.dto.response.RevenueByPeriodReportResponse;
 import com.ecommerce.api.dto.response.StockReportResponse;
+import com.ecommerce.api.dto.response.VoucherUsageReportResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestController
@@ -36,5 +41,28 @@ public class ReportController {
         }
         BaseResponse<List<RevenueByPeriodReportResponse>> response = reportService.revenueByPeriodReport(request, period);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/voucher")
+    public ResponseEntity<BaseResponse<List<VoucherUsageReportResponse>>> voucherUsageReport(@RequestBody VoucherUsageReportRequest request,
+                                                                                             @RequestParam String startDate,
+                                                                                             @RequestParam String endDate) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            LocalDate start = LocalDate.parse(startDate, formatter);
+            LocalDate end = LocalDate.parse(endDate, formatter);
+
+            if (start.isAfter(end)) {
+                return ResponseEntity.badRequest().body((new BaseResponse<>("error", "Start date must be after end date", null)));
+            }
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body(new BaseResponse<>("error", "Invalid date format. Use yyyy-MM-dd", null));
+        }
+
+        BaseResponse<List<VoucherUsageReportResponse>> response = reportService.voucherUsageReport(request, startDate, endDate);
+        return ResponseEntity.ok(response);
+
+
     }
 }

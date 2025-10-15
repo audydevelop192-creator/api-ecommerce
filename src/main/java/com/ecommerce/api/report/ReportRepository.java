@@ -2,6 +2,7 @@ package com.ecommerce.api.report;
 
 import com.ecommerce.api.dto.response.RevenueByPeriodReportResponse;
 import com.ecommerce.api.dto.response.StockReportResponse;
+import com.ecommerce.api.dto.response.VoucherUsageReportResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -52,5 +53,27 @@ public class ReportRepository {
                 rs.getString("period"),
                 rs.getBigDecimal("totalRevenue")
         ));
+    }
+
+    public List<VoucherUsageReportResponse> findVoucherUsageReport(String startDate, String endDate) {
+
+       String sql = """
+            SELECT v.code AS voucherCode, 
+                   COUNT(o.id) AS usedCount, 
+                   SUM(v.discount_value) AS totalDiscountGiven
+            FROM orders o
+            JOIN vouchers v ON o.voucher_id = v.id
+            WHERE o.voucher_id IS NOT NULL
+              AND o.order_date BETWEEN ? AND ?
+            GROUP BY v.code
+            ORDER BY usedCount DESC
+        """;
+
+        return jdbcTemplate.query(sql,
+                new Object[]{startDate, endDate},
+                (rs, rowNum) -> new VoucherUsageReportResponse(
+                        rs.getString("voucherCode"),
+                        rs.getInt("usedCount"),
+                        rs.getBigDecimal("totalDiscountGiven")));
     }
 }
