@@ -37,4 +37,5 @@ public class ReportController {
         BaseResponse<List<RevenueByPeriodReportResponse>> response = reportService.revenueByPeriodReport(request, period);
         return ResponseEntity.ok(response);
     }
+
 }
