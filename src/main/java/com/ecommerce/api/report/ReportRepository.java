@@ -74,6 +74,7 @@ public class ReportRepository {
                 (rs, rowNum) -> new VoucherUsageReportResponse(
                         rs.getString("voucherCode"),
                         rs.getInt("usedCount"),
-                        rs.getBigDecimal("totalDiscountGiven")));
+                        rs.getBigDecimal("totalDiscountGiven"))
+        );
     }
 }
