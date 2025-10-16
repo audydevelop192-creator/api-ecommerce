@@ -138,7 +138,7 @@ public class OrderService {
 
     }
 
-    public BaseResponse<ListUserOrderResponse> listOrder(LIstUserOrderRequest request) {
+    public BaseResponse<ListUserOrderResponse> listOrder() {
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
         if (authenticatedUser == null) {
             return new BaseResponse<>("error", "Invalid or expired token", null);
@@ -160,7 +160,7 @@ public class OrderService {
         return new BaseResponse<>("success", "Orders retrieved successfully", listUserOrderResponse);
     }
 
-    public BaseResponse<ViewOrderDetailResponse> viewOrderDetail(Integer id, ViewOrderDetailRequest request) {
+    public BaseResponse<ViewOrderDetailResponse> viewOrderDetail(Integer id) {
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
         if (authenticatedUser == null) {
             return new BaseResponse<>("error", "Invalid or expired token", null);

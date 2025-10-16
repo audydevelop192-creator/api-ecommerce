@@ -60,7 +60,7 @@ public class ProductService {
     }
 
     //LIST PRODUCT
-    public BaseResponse<ListProductResponse> listProduct(ListProductRequest request) {
+    public BaseResponse<ListProductResponse> listProduct() {
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
         if (authenticatedUser == null) {
             return new BaseResponse<>("error", "Invalid or expired token", null);

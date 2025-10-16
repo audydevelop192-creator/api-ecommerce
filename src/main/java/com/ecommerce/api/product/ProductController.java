@@ -22,8 +22,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<ListProductResponse>> listProduct(@RequestBody ListProductRequest request){
-        BaseResponse<ListProductResponse> response = productService.listProduct(request);
+    public ResponseEntity<BaseResponse<ListProductResponse>> listProduct(){
+        BaseResponse<ListProductResponse> response = productService.listProduct();
         return ResponseEntity.ok(response);
     }
 

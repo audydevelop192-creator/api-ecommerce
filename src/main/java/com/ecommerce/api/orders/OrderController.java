@@ -27,15 +27,15 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<ListUserOrderResponse>> listOrder(@RequestBody LIstUserOrderRequest request) {
-        BaseResponse<ListUserOrderResponse> response = orderService.listOrder(request);
+    public ResponseEntity<BaseResponse<ListUserOrderResponse>> listOrder() {
+        BaseResponse<ListUserOrderResponse> response = orderService.listOrder();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse<ViewOrderDetailResponse>> viewOrderDetail(@RequestBody ViewOrderDetailRequest request,
-                                                                                 @PathVariable Integer id) {
-        BaseResponse<ViewOrderDetailResponse> response = orderService.viewOrderDetail(id, request);
+    public ResponseEntity<BaseResponse<ViewOrderDetailResponse>> viewOrderDetail(
+            @PathVariable Integer id) {
+        BaseResponse<ViewOrderDetailResponse> response = orderService.viewOrderDetail(id);
         return ResponseEntity.ok(response);
     }
 
