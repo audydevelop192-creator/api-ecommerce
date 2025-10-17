@@ -27,12 +27,20 @@ public class AuthService {
         if (request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
             return new BaseResponse<>("error", "Username, password and email are required", null);
         }
+
         try {
             User existing = authRepository.findByUsername(request.getUsername());
+            User byEmail = authRepository.findByEmail(request.getEmail());
             if (existing != null) {
                 return new BaseResponse<>("error", "Username already taken", null);
             }
-        } catch (Exception ignored) {}
+
+            if (byEmail != null) {
+                return new BaseResponse<>("error", "Email already taken", null);
+            }
+        } catch (Exception ignored) {
+            return new BaseResponse<>("error", "somethink when wrong", null);
+        }
 
         User newUser = new User();
         newUser.setUsername(request.getUsername());
@@ -57,6 +65,7 @@ public class AuthService {
         if (request.getPassword() == null || request.getEmail() == null) {
             return new BaseResponse<>("error", "password and email are required", null);
         }
+
         User existing = authRepository.findByEmail(request.getEmail());
         if (existing != null && passwordEncoder.matches(request.getPassword(), existing.getPassword())) {
             String token = jwtUtils.generateToken(existing.getId(), existing.getUsername(), existing.getRole(), existing.getEmail());
