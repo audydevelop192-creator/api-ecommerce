@@ -22,7 +22,7 @@ public class ReportService {
         this.reportRepository = reportRepository;
     }
 
-    public BaseResponse<List<StockReportResponse>> stockReport(StockReportRequest request){
+    public BaseResponse<List<StockReportResponse>> stockReport(){
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
         if (authenticatedUser== null){
             return new BaseResponse<>("error", "invalid or expired token", null);
@@ -37,7 +37,7 @@ public class ReportService {
         return new BaseResponse<>("success", "Stock report retrieved successfully", stockReport);
     }
 
-    public BaseResponse<List<RevenueByPeriodReportResponse>> revenueByPeriodReport(RevenueByPeriodReportRequest request, String period){
+    public BaseResponse<List<RevenueByPeriodReportResponse>> revenueByPeriodReport(String period){
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
         if (authenticatedUser == null){
             return new BaseResponse<>("error", "Invalid or expired token", null);
@@ -51,7 +51,7 @@ public class ReportService {
         return new BaseResponse<>("success", "Revenue report retrieved successfully", revenueReport);
     }
 
-    public BaseResponse<List<VoucherUsageReportResponse>>voucherUsageReport(VoucherUsageReportRequest request, String startDate,String endDate){
+    public BaseResponse<List<VoucherUsageReportResponse>>voucherUsageReport( String startDate,String endDate){
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
         if (authenticatedUser == null){
             return new BaseResponse<>("error", "Invalid or expired token", null);

@@ -26,27 +26,27 @@ public class ReportController {
     }
 
     @GetMapping("/stock")
-    public ResponseEntity<BaseResponse<List<StockReportResponse>>> stockReport(@RequestBody StockReportRequest request) {
-        BaseResponse<List<StockReportResponse>> response = reportService.stockReport(request);
+    public ResponseEntity<BaseResponse<List<StockReportResponse>>> stockReport() {
+        BaseResponse<List<StockReportResponse>> response = reportService.stockReport();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/revenue")
-    public ResponseEntity<BaseResponse<List<RevenueByPeriodReportResponse>>> revenueByPeriod(@RequestBody RevenueByPeriodReportRequest request,
-                                                                                             @RequestParam String period) {
+    public ResponseEntity<BaseResponse<List<RevenueByPeriodReportResponse>>> revenueByPeriod(
+            @RequestParam String period) {
         if (!period.equalsIgnoreCase("daily") &&
                 !period.equalsIgnoreCase("weekly") &&
                 !period.equalsIgnoreCase("monthly")) {
             throw new IllegalArgumentException("Period must be daily, weekly, or monthly");
         }
-        BaseResponse<List<RevenueByPeriodReportResponse>> response = reportService.revenueByPeriodReport(request, period);
+        BaseResponse<List<RevenueByPeriodReportResponse>> response = reportService.revenueByPeriodReport(period);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/voucher")
-    public ResponseEntity<BaseResponse<List<VoucherUsageReportResponse>>> voucherUsageReport(@RequestBody VoucherUsageReportRequest request,
-                                                                                             @RequestParam String startDate,
-                                                                                             @RequestParam String endDate) {
+    public ResponseEntity<BaseResponse<List<VoucherUsageReportResponse>>> voucherUsageReport(
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
@@ -60,7 +60,7 @@ public class ReportController {
             return ResponseEntity.badRequest().body(new BaseResponse<>("error", "Invalid date format. Use yyyy-MM-dd", null));
         }
 
-        BaseResponse<List<VoucherUsageReportResponse>> response = reportService.voucherUsageReport(request, startDate, endDate);
+        BaseResponse<List<VoucherUsageReportResponse>> response = reportService.voucherUsageReport( startDate, endDate);
         return ResponseEntity.ok(response);
 
 

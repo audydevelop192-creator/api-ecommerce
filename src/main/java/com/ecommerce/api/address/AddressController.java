@@ -34,8 +34,8 @@ public class AddressController {
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    public ResponseEntity<BaseResponse<ListAddressResponse>>listAddresses(@RequestBody ListAddressRequest request) {
-        BaseResponse<ListAddressResponse> response = addressService.listAddress(request);
+    public ResponseEntity<BaseResponse<ListAddressResponse>>listAddresses() {
+        BaseResponse<ListAddressResponse> response = addressService.listAddress();
         return ResponseEntity.ok(response);
     }
     @PutMapping("/{id}")

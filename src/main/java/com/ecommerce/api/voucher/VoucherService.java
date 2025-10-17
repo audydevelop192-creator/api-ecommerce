@@ -81,7 +81,7 @@ public class VoucherService {
 
     }
 
-    public BaseResponse<ListVoucherResponse> listVoucher(ListVoucherRequest request) {
+    public BaseResponse<ListVoucherResponse> listVoucher() {
         AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
         if (authenticatedUser == null) {
             return new BaseResponse<>("error", "Invalid or expired token", null);

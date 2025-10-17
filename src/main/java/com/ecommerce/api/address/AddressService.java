@@ -83,7 +83,7 @@ public class AddressService {
         return new BaseResponse<>("success", "Address added successfully", response);
     }
 
-    public BaseResponse<ListAddressResponse>listAddress(ListAddressRequest request) {
+    public BaseResponse<ListAddressResponse>listAddress() {
         AuthenticatedUser authenticatedUser= SecurityUtils.getCurrentUser();
 
         if (authenticatedUser == null) {

@@ -25,8 +25,8 @@ public class VoucherController {
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    public ResponseEntity<BaseResponse<ListVoucherResponse>> listVoucher(@RequestBody ListVoucherRequest request) {
-        BaseResponse<ListVoucherResponse> response = voucherService.listVoucher(request);
+    public ResponseEntity<BaseResponse<ListVoucherResponse>> listVoucher() {
+        BaseResponse<ListVoucherResponse> response = voucherService.listVoucher();
         return ResponseEntity.ok(response);
     }
     @PutMapping("/{id}")
