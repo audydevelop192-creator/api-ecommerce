@@ -4,10 +4,7 @@ import com.ecommerce.api.config.AuthenticatedUser;
 import com.ecommerce.api.dto.request.RevenueByPeriodReportRequest;
 import com.ecommerce.api.dto.request.StockReportRequest;
 import com.ecommerce.api.dto.request.VoucherUsageReportRequest;
-import com.ecommerce.api.dto.response.BaseResponse;
-import com.ecommerce.api.dto.response.RevenueByPeriodReportResponse;
-import com.ecommerce.api.dto.response.StockReportResponse;
-import com.ecommerce.api.dto.response.VoucherUsageReportResponse;
+import com.ecommerce.api.dto.response.*;
 import com.ecommerce.api.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
@@ -68,4 +65,20 @@ public class ReportService {
 
     }
 
+
+    public BaseResponse<SalesReportResponse> salesReport(String startDate, String endDate){
+        AuthenticatedUser authenticatedUser = SecurityUtils.getCurrentUser();
+
+        if (authenticatedUser == null){
+            return new BaseResponse<>("error", "Invalid or expired token", null);
+        }
+
+        if (!authenticatedUser.getRole().equalsIgnoreCase("ADMIN")){
+            return new BaseResponse<>("error", "Invalid user access", null);
+        }
+
+        SalesReportResponse salesReport = reportRepository.findSalesReport(startDate, endDate);
+
+        return new BaseResponse<>("success", "Sales report retrieved successfully", salesReport);
+    }
 }
